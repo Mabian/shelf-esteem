@@ -1,8 +1,16 @@
 # Shelf Esteem
 
 A virtual bookshelf for your Goodreads books. Enter your Goodreads user ID and Shelf Esteem reads
-your "read" shelf from the public Goodreads RSS feed. For now it shows your name and how many books
-you have read; the actual bookshelf view is coming next.
+your "read" shelf from the public Goodreads RSS feed and puts every book on a drawn bookcase,
+newest first, with a divider for each year. Each spine takes its color from the book's cover.
+Hover a book to tip it out of the shelf, click it to see its cover large. The bookcase comes in
+Walnut, Oak, Lavender and White.
+
+Pages:
+
+- `/`: enter your Goodreads user ID
+- `/shelf/<user-id>`: the bookcase, shareable
+- `/shelf/<user-id>/book/<book-id>`: one opened book
 
 Your user ID is the last part of your Goodreads profile URL, number and name together, e.g.
 `goodreads.com/user/show/123456789-cooluser` -> `123456789-cooluser`.
