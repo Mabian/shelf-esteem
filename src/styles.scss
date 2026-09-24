@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --color-paper: #f4ede0;
+  --color-card: #fffdf8;
+  --color-ink: #2b2118;
+  --color-ink-muted: #6b5b4b;
+  --color-border: #d9ccb8;
+  --color-accent: #2f5d50;
+  --color-accent-hover: #244a40;
+  --color-focus: #c77d2e;
+  --color-error: #a1332b;
+
+  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}

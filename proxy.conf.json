@@ -1,0 +1,8 @@
+{
+  "/goodreads": {
+    "target": "https://www.goodreads.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/goodreads": "" }
+  }
+}
