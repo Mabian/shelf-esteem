@@ -1,3 +1,10 @@
+.shelf-lookup-page {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: 1rem;
+}
+
 .shelf-lookup {
   width: 100%;
   max-width: 28rem;
@@ -118,48 +125,6 @@
         outline: 3px solid var(--color-focus);
         outline-offset: 3px;
       }
-    }
-  }
-
-  .shelf-lookup-status {
-    color: var(--color-ink-muted);
-
-    &:empty {
-      display: none;
-    }
-
-    p {
-      margin: 0;
-    }
-
-    .shelf-lookup-status-error {
-      color: var(--color-error);
-      font-weight: 500;
-    }
-
-    .shelf-lookup-result {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.875rem 1.125rem;
-      color: var(--color-ink);
-      background: var(--color-highlight);
-      border-radius: 1.25rem;
-    }
-
-    .shelf-lookup-sticker {
-      flex: none;
-      display: grid;
-      place-items: center;
-      width: 4.75rem;
-      height: 4.75rem;
-      font-family: var(--font-display);
-      font-size: 1.6rem;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-      background: var(--color-sticker);
-      border-radius: 50%;
-      transform: rotate(-8deg);
     }
   }
 }

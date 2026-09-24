@@ -1,0 +1,94 @@
+<main class="shelf-page" [attr.data-bookcase]="bookcase()">
+  <div class="shelf-page-content" [inert]="bookOpen()">
+    <header class="shelf-page-header">
+      <h1 class="shelf-page-title">
+        @if (shelf.hasValue()) {
+          {{ shelf.value().username }}'s shelf
+          <span class="shelf-page-count">· {{ shelf.value().books.length }} books</span>
+        } @else {
+          Shelf Esteem
+        }
+      </h1>
+
+      <div class="shelf-page-options">
+        <fieldset class="shelf-page-picker">
+          <legend>Bookcase</legend>
+          @for (option of bookcases; track option.value) {
+            <label class="shelf-page-choice">
+              <input
+                type="radio"
+                name="bookcase"
+                [value]="option.value"
+                [checked]="bookcase() === option.value"
+                (change)="bookcase.set(option.value)"
+              />
+              <span class="shelf-page-swatch" [style.background]="option.swatch"></span>
+              {{ option.label }}
+            </label>
+          }
+        </fieldset>
+
+        <fieldset class="shelf-page-picker">
+          <legend>Years</legend>
+          <label class="shelf-page-choice">
+            <input
+              type="radio"
+              name="years"
+              [checked]="!newShelfPerYear()"
+              (change)="newShelfPerYear.set(false)"
+            />
+            Flow on
+          </label>
+          <label class="shelf-page-choice">
+            <input
+              type="radio"
+              name="years"
+              [checked]="newShelfPerYear()"
+              (change)="newShelfPerYear.set(true)"
+            />
+            New shelf per year
+          </label>
+        </fieldset>
+      </div>
+
+      <a class="shelf-page-back" routerLink="/">Look up another shelf</a>
+    </header>
+
+    <div class="shelf-page-case">
+      <ul class="shelf-page-rows" [attr.aria-busy]="shelf.isLoading()">
+        @for (group of yearGroups(); track group.year) {
+          @if (newShelfPerYear() && !$first) {
+            <li class="shelf-page-break" aria-hidden="true"></li>
+          }
+          <li class="shelf-page-divider">
+            <span class="shelf-page-divider-card">
+              <strong>{{ group.year }}</strong>
+              <small aria-hidden="true">{{ group.books.length }}</small>
+              <span class="sr-only">, {{ group.books.length }} books</span>
+            </span>
+          </li>
+          @for (book of group.books; track book.id) {
+            <li
+              app-shelf-book
+              [book]="book"
+              [pairedWithCover]="selectedId() === book.id && !bookOpen()"
+              (click)="selectedId.set(book.id)"
+            ></li>
+          }
+        }
+      </ul>
+
+      <div class="shelf-page-status" aria-live="polite">
+        @if (shelf.isLoading()) {
+          <p>Stacking your books…</p>
+        } @else if (errorMessage(); as message) {
+          <p>{{ message }} <a routerLink="/">Try another ID</a></p>
+        } @else if (shelf.hasValue() && shelf.value().books.length === 0) {
+          <p>No books on the read shelf yet.</p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <router-outlet (activate)="onBookOpened($event)" (deactivate)="onBookClosed()" />
+</main>

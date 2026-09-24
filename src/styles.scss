@@ -12,11 +12,83 @@
   --color-focus: #a99ff5;
   --color-focus-soft: #e1ddff;
   --color-error: #b42a4a;
-  --color-highlight: #fff6d8;
   --color-sticker: #ffcc3d;
+  --color-spine-empty: #cfc8f5;
 
   --font-display: Fredoka, 'Trebuchet MS', system-ui, sans-serif;
   --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --texture-paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0 0 0 -0.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  // Wider than the bookcase can get (max 74rem), so the grain never shows a seam where the tile repeats
+  --texture-wood: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2400' height='720'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.003 0.22' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0 0 0 -0.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+}
+
+// Registered so the spine color can fade in once it has been read from the cover
+@property --shelf-book-color {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #cfc8f5;
+}
+
+// Bookcase palettes, picked on the shelf page
+[data-bookcase='walnut'] {
+  --bookcase-page: #ece6e1;
+  --bookcase-frame: #5a3a26;
+  --bookcase-frame-edge: #432a1b;
+  --bookcase-wall: #4a3122;
+  --bookcase-wall-shadow: #24160d;
+  --bookcase-plank-top: #7b5438;
+  --bookcase-plank-front: #5f3f29;
+  --bookcase-plank-shadow: rgb(0 0 0 / 40%);
+  --bookcase-wood: var(--texture-wood);
+  --bookcase-divider: #e9c46a;
+  --bookcase-divider-ink: #2e1d10;
+  --bookcase-focus: #ffcc3d;
+}
+
+[data-bookcase='oak'] {
+  --bookcase-page: #f2ece4;
+  --bookcase-frame: #c3915a;
+  --bookcase-frame-edge: #a8773f;
+  --bookcase-wall: #e6caa0;
+  --bookcase-wall-shadow: #b98d5a;
+  --bookcase-plank-top: #dcb37f;
+  --bookcase-plank-front: #bf8c54;
+  --bookcase-plank-shadow: rgb(70 40 10 / 30%);
+  --bookcase-wood: var(--texture-wood);
+  --bookcase-divider: #fff8e8;
+  --bookcase-divider-ink: #5a3a17;
+  --bookcase-focus: #26214a;
+}
+
+[data-bookcase='lavender'] {
+  --bookcase-page: #ebe8fb;
+  --bookcase-frame: #cfc6f7;
+  --bookcase-frame-edge: #b9adf0;
+  --bookcase-wall: #f4f1ff;
+  --bookcase-wall-shadow: #d6cff6;
+  --bookcase-plank-top: #e3ddfc;
+  --bookcase-plank-front: #cfc6f7;
+  --bookcase-plank-shadow: rgb(38 33 74 / 18%);
+  --bookcase-wood: none;
+  --bookcase-divider: #ffcc3d;
+  --bookcase-divider-ink: #26214a;
+  --bookcase-focus: #4b3fc4;
+}
+
+[data-bookcase='white'] {
+  --bookcase-page: #e8ebf0;
+  --bookcase-frame: #fbfbfd;
+  --bookcase-frame-edge: #dde1e8;
+  --bookcase-wall: #eef0f4;
+  --bookcase-wall-shadow: #cfd4dd;
+  --bookcase-plank-top: #ffffff;
+  --bookcase-plank-front: #f3f4f7;
+  --bookcase-plank-shadow: rgb(30 40 60 / 16%);
+  --bookcase-wood: none;
+  --bookcase-divider: #26214a;
+  --bookcase-divider-ink: #ffffff;
+  --bookcase-focus: #4b3fc4;
 }
 
 * {
@@ -30,4 +102,34 @@ body {
   font-family: var(--font-body);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+// The spine that was clicked morphs into the opened cover and back
+::view-transition-group(book) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+::view-transition-old(book),
+::view-transition-new(book) {
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }

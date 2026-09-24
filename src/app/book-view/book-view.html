@@ -1,0 +1,39 @@
+<div
+  class="book-view"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="book-view-title"
+  [style.--book-view-color]="backgroundColor()"
+  (click)="onBackgroundClick($event)"
+>
+  <button #closeButton class="book-view-close" type="button" aria-label="Close book" (click)="close()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  </button>
+
+  @if (book(); as book) {
+    <div class="book-view-content">
+      @if (book.coverUrl) {
+        <img class="book-view-cover" [src]="book.coverUrl" [alt]="'Cover of ' + book.title" />
+      } @else {
+        <div class="book-view-cover book-view-cover-generated" aria-hidden="true">
+          <span class="book-view-generated-title">{{ book.title }}</span>
+          <span class="book-view-generated-author">{{ book.author }}</span>
+        </div>
+      }
+      <div class="book-view-caption">
+        <h2 id="book-view-title">{{ book.title }}</h2>
+        <p>{{ book.author }}</p>
+        <p class="book-view-meta">
+          @if (book.rating) {
+            <span class="book-view-stars" role="img" [attr.aria-label]="'Rated ' + book.rating + ' of 5'">{{ stars() }}</span>
+          } @else {
+            <span>Not rated</span>
+          }
+          <span>Read {{ book.read | date: 'MMMM y' }}</span>
+        </p>
+      </div>
+    </div>
+  }
+</div>

@@ -1,7 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, inject, resource, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
-import { GoodreadsService } from '../goodreads.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shelf-lookup',
@@ -22,31 +21,17 @@ export class ShelfLookup {
     { height: 90, color: '#7b6ef6' },
   ];
 
-  private readonly goodreadsService = inject(GoodreadsService);
-  private readonly submittedId = signal<string | undefined>(undefined);
+  private readonly router = inject(Router);
 
   protected readonly lookupForm = form(
     signal({ userId: '' }),
     (path) => required(path.userId, { message: 'Please enter your Goodreads user ID.' }),
     {
       submission: {
-        action: async (field) => this.submittedId.set(field.userId().value().trim()),
+        action: async (field) => {
+          await this.router.navigate(['/shelf', field.userId().value().trim()]);
+        },
       },
     },
   );
-
-  protected readonly shelf = resource({
-    params: () => this.submittedId(),
-    loader: ({ params }) => this.goodreadsService.fetchReadShelf(params),
-  });
-
-  protected readonly errorMessage = computed(() => {
-    const error = this.shelf.error();
-    if (!error) {
-      return undefined;
-    }
-    return error instanceof HttpErrorResponse && error.status === 404
-      ? 'No Goodreads user found with that ID.'
-      : 'Could not load the shelf. Please try again.';
-  });
 }

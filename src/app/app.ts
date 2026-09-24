@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ShelfLookup } from './shelf-lookup/shelf-lookup';
 
 @Component({
-  imports: [RouterOutlet, ShelfLookup],
+  imports: [RouterOutlet],
   selector: 'app-root',
-  styleUrl: './app.scss',
-  templateUrl: './app.html',
+  template: '<router-outlet />',
 })
 export class App {}

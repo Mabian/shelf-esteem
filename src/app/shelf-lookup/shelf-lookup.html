@@ -1,60 +1,46 @@
-<section class="shelf-lookup" aria-labelledby="shelf-lookup-title">
-  <div class="shelf-lookup-shelf" aria-hidden="true">
-    @for (spine of illustrationBooks; track $index) {
-      <span
-        class="shelf-lookup-spine"
-        [style.height.px]="spine.height"
-        [style.background]="spine.color"
-      ></span>
-    }
-  </div>
-
-  <div class="shelf-lookup-body">
-    <div>
-      <h1 id="shelf-lookup-title" class="shelf-lookup-title">Shelf Esteem</h1>
-      <p class="shelf-lookup-tagline">Your Goodreads books, on a shelf worth showing off.</p>
-    </div>
-
-    <form class="shelf-lookup-form" [formRoot]="lookupForm">
-      <label class="shelf-lookup-label" for="shelf-lookup-user-id">Goodreads user ID</label>
-      <input
-        id="shelf-lookup-user-id"
-        class="shelf-lookup-input"
-        type="text"
-        autocomplete="off"
-        placeholder="e.g. 123456789-cooluser"
-        aria-describedby="shelf-lookup-hint shelf-lookup-error"
-        [attr.aria-invalid]="lookupForm.userId().touched() && lookupForm.userId().invalid()"
-        [formField]="lookupForm.userId"
-      />
-      <p id="shelf-lookup-hint" class="shelf-lookup-hint">
-        The last part of your Goodreads profile URL, e.g.
-        goodreads.com/user/show/<b>123456789-cooluser</b>
-      </p>
-      <p id="shelf-lookup-error" class="shelf-lookup-field-error">
-        @if (lookupForm.userId().touched()) {
-          @for (error of lookupForm.userId().errors(); track error.kind) {
-            {{ error.message }}
-          }
-        }
-      </p>
-      <button class="shelf-lookup-button" type="submit">Stack 'em up</button>
-    </form>
-
-    <div class="shelf-lookup-status" aria-live="polite">
-      @if (shelf.isLoading()) {
-        <p class="shelf-lookup-loading">Stacking your books…</p>
-      } @else if (errorMessage(); as message) {
-        <p class="shelf-lookup-status-error">{{ message }}</p>
-      } @else if (shelf.value(); as result) {
-        <div class="shelf-lookup-result">
-          <span class="shelf-lookup-sticker" aria-hidden="true">{{ result.readCount }}</span>
-          <p>
-            <strong>{{ result.username }}</strong> has read {{ result.readCount }}
-            {{ result.readCount === 1 ? 'book' : 'books' }}.
-          </p>
-        </div>
+<main class="shelf-lookup-page">
+  <section class="shelf-lookup" aria-labelledby="shelf-lookup-title">
+    <div class="shelf-lookup-shelf" aria-hidden="true">
+      @for (spine of illustrationBooks; track $index) {
+        <span
+          class="shelf-lookup-spine"
+          [style.height.px]="spine.height"
+          [style.background]="spine.color"
+        ></span>
       }
     </div>
-  </div>
-</section>
+
+    <div class="shelf-lookup-body">
+      <div>
+        <h1 id="shelf-lookup-title" class="shelf-lookup-title">Shelf Esteem</h1>
+        <p class="shelf-lookup-tagline">Your Goodreads books, on a shelf worth showing off.</p>
+      </div>
+
+      <form class="shelf-lookup-form" [formRoot]="lookupForm">
+        <label class="shelf-lookup-label" for="shelf-lookup-user-id">Goodreads user ID</label>
+        <input
+          id="shelf-lookup-user-id"
+          class="shelf-lookup-input"
+          type="text"
+          autocomplete="off"
+          placeholder="e.g. 123456789-cooluser"
+          aria-describedby="shelf-lookup-hint shelf-lookup-error"
+          [attr.aria-invalid]="lookupForm.userId().touched() && lookupForm.userId().invalid()"
+          [formField]="lookupForm.userId"
+        />
+        <p id="shelf-lookup-hint" class="shelf-lookup-hint">
+          The last part of your Goodreads profile URL, e.g.
+          goodreads.com/user/show/<b>123456789-cooluser</b>
+        </p>
+        <p id="shelf-lookup-error" class="shelf-lookup-field-error">
+          @if (lookupForm.userId().touched()) {
+            @for (error of lookupForm.userId().errors(); track error.kind) {
+              {{ error.message }}
+            }
+          }
+        </p>
+        <button class="shelf-lookup-button" type="submit">Stack 'em up</button>
+      </form>
+    </div>
+  </section>
+</main>

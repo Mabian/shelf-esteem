@@ -2,9 +2,24 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  /** 0 when Goodreads has no page count. */
+  pages: number;
+  /** The user's own rating */
+  rating: number;
+  /** When the user read the book, or added it to the shelf if no read date was entered. */
+  read: Date;
+  /** Missing when Goodreads only has its gray placeholder. */
+  coverUrl?: string;
+  thumbnailUrl?: string;
+}
+
 export interface ReadShelf {
   username: string;
-  readCount: number;
+  books: Book[];
 }
 
 // Goodreads caps the RSS feed at 200 items per page, larger values fall back to 100.
@@ -13,19 +28,30 @@ const PAGE_SIZE = 200;
 @Service()
 export class GoodreadsService {
   private readonly http = inject(HttpClient);
+  private readonly shelves = new Map<string, Promise<ReadShelf>>();
 
-  async fetchReadShelf(userId: string): Promise<ReadShelf> {
+  fetchReadShelf(userId: string): Promise<ReadShelf> {
+    let shelf = this.shelves.get(userId);
+    if (!shelf) {
+      shelf = this.download(userId);
+      shelf.catch(() => this.shelves.delete(userId));
+      this.shelves.set(userId, shelf);
+    }
+    return shelf;
+  }
+
+  private async download(userId: string): Promise<ReadShelf> {
     let username = '';
-    let readCount = 0;
+    const books: Book[] = [];
     for (let page = 1; ; page++) {
       const feed = await this.fetchPage(userId, page);
       if (page === 1) {
         username = parseUsername(feed);
       }
-      const items = feed.querySelectorAll('item').length;
-      readCount += items;
-      if (items < PAGE_SIZE) {
-        return { username, readCount };
+      const items = [...feed.querySelectorAll('item')];
+      books.push(...items.map(parseBook));
+      if (items.length < PAGE_SIZE) {
+        return { username, books };
       }
     }
   }
@@ -44,4 +70,24 @@ export class GoodreadsService {
 function parseUsername(feed: Document): string {
   const title = feed.querySelector('channel > title')?.textContent ?? '';
   return title.match(/^(.*?)\s*'s bookshelf/)?.[1].trim() ?? title;
+}
+
+function parseBook(item: Element): Book {
+  const text = (selector: string) => item.querySelector(selector)?.textContent?.trim() ?? '';
+  return {
+    id: text('book_id'),
+    title: text('title'),
+    author: text('author_name'),
+    // num_pages sits inside a nested <book> element
+    pages: Number(text('num_pages')) || 0,
+    rating: Number(text('user_rating')) || 0,
+    read: new Date(text('user_read_at') || text('user_date_added')),
+    coverUrl: cover(text('book_large_image_url')),
+    thumbnailUrl: cover(text('book_small_image_url')),
+  };
+}
+
+// Books without a cover point at a placeholder, which (unlike real covers) blocks cross-origin reads
+function cover(url: string): string | undefined {
+  return url && !url.includes('/nophoto/') ? url : undefined;
 }

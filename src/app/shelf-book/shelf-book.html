@@ -1,0 +1,22 @@
+<a
+  class="shelf-book-link"
+  [id]="'book-' + book().id"
+  [routerLink]="['book', book().id]"
+  [attr.aria-label]="book().title + ' by ' + book().author"
+  (pointerenter)="preloadCover()"
+  (focus)="preloadCover()"
+>
+  <span class="shelf-book-box" [style.width.px]="width()" [style.height.px]="height()">
+    <span
+      class="shelf-book-spine"
+      [class]="styleClass()"
+      [style.view-transition-name]="pairedWithCover() ? 'book' : null"
+    >
+      <span class="shelf-book-title" aria-hidden="true">{{ title() }}</span>
+      @if (author(); as author) {
+        <span class="shelf-book-author" aria-hidden="true">{{ author }}</span>
+      }
+    </span>
+    <span class="shelf-book-pages"></span>
+  </span>
+</a>
