@@ -76,8 +76,6 @@
   width: 100%;
   height: 100%;
   padding: 14px 0 12px;
-  // Lets the lettering size itself to the spine width
-  container-type: inline-size;
   color: var(--shelf-book-ink, var(--color-ink));
   background:
     linear-gradient(90deg, rgb(0 0 0 / 16%), transparent 22%, rgb(255 255 255 / 14%) 48%, transparent 70%, rgb(0 0 0 / 20%)),
@@ -115,9 +113,14 @@
   .shelf-book-title {
     margin-block: auto;
     max-height: 100%;
-    font-size: 11.5px;
     font-weight: 700;
     letter-spacing: 0.02em;
+
+    &.shelf-book-title-two-lines {
+      max-block-size: 2em;
+      white-space: normal;
+      text-wrap: balance;
+    }
   }
 
   .shelf-book-author {
@@ -134,7 +137,6 @@
   &.shelf-book-serif {
     .shelf-book-title {
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: 13px;
     }
 
     .shelf-book-author {
@@ -148,14 +150,12 @@
 
   &.shelf-book-classic .shelf-book-title {
     font-family: 'Libre Baskerville', Georgia, serif;
-    font-size: 10.5px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
   &.shelf-book-condensed .shelf-book-title {
     font-family: Oswald, 'Arial Narrow', sans-serif;
-    font-size: 13px;
     font-weight: 500;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -163,8 +163,6 @@
 
   &.shelf-book-display .shelf-book-title {
     font-family: 'Bebas Neue', Impact, sans-serif;
-    // Its capitals fill almost the whole line, so thin spines need smaller letters
-    font-size: min(17px, 72cqi);
     font-weight: 400;
     letter-spacing: 0.06em;
   }

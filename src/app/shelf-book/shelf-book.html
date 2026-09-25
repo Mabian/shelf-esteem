@@ -12,7 +12,13 @@
       [class]="styleClass()"
       [style.view-transition-name]="pairedWithCover() ? 'book' : null"
     >
-      <span class="shelf-book-title" aria-hidden="true">{{ title() }}</span>
+      <span
+        class="shelf-book-title"
+        [class.shelf-book-title-two-lines]="lettering().lines === 2"
+        [style.font-size.px]="lettering().fontSize"
+        aria-hidden="true"
+        >{{ title() }}</span
+      >
       @if (author(); as author) {
         <span class="shelf-book-author" aria-hidden="true">{{ author }}</span>
       }

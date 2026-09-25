@@ -2,7 +2,7 @@ import { Component, computed, inject, input, resource } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CoverColorService, inkFor, toCss } from '../cover-color.service';
 import { Book } from '../goodreads.service';
-import { showsAuthor, spineHeight, spineStyle, spineTitle, spineWidth } from './spine';
+import { spineHeight, spineLettering, spineStyle, spineTitle, spineWidth } from './spine';
 
 @Component({
   selector: 'li[app-shelf-book]',
@@ -23,12 +23,21 @@ export class ShelfBook {
 
   protected readonly width = computed(() => spineWidth(this.book().pages));
   protected readonly height = computed(() => spineHeight(this.book().id));
-  protected readonly styleClass = computed(() => `shelf-book-${spineStyle(this.book().id)}`);
+  protected readonly styleClass = computed(() => `shelf-book-${this.lettering().style}`);
   protected readonly title = computed(() => spineTitle(this.book().title));
-  protected readonly author = computed(() => {
-    const surname = this.book().author.split(' ').pop() ?? '';
-    return showsAuthor(this.width(), this.title(), surname) ? surname : undefined;
-  });
+  private readonly surname = computed(() => this.book().author.split(' ').pop() ?? '');
+  protected readonly lettering = computed(() =>
+    spineLettering(
+      spineStyle(this.book().id),
+      this.title(),
+      this.surname(),
+      this.width(),
+      this.height(),
+    ),
+  );
+  protected readonly author = computed(() =>
+    this.lettering().showsAuthor ? this.surname() : undefined,
+  );
 
   private readonly coverColor = resource({
     params: () => this.book().thumbnailUrl,
