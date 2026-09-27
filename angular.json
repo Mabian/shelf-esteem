@@ -30,7 +30,19 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "@fontsource/bebas-neue/400.css",
+              "@fontsource/dm-sans/400.css",
+              "@fontsource/dm-sans/500.css",
+              "@fontsource/dm-sans/700.css",
+              "@fontsource/fredoka/500.css",
+              "@fontsource/fredoka/600.css",
+              "@fontsource/libre-baskerville/700.css",
+              "@fontsource/oswald/500.css",
+              "@fontsource/playfair-display/700.css",
+              "@fontsource/playfair-display/600-italic.css",
+              "src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
