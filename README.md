@@ -25,8 +25,8 @@ pnpm start
 Then open `http://localhost:4200/`.
 
 Goodreads does not allow cross-origin requests, so the dev server proxies every request under
-`/goodreads` to `https://www.goodreads.com` (see `proxy.conf.json`). That only works with
-`pnpm start`; a production build will need a backend that fetches the feed instead.
+`/goodreads` to `https://www.goodreads.com` (see `proxy.conf.json`). Production builds go through
+a Cloudflare Worker instead, see [Deployment](#deployment).
 
 ## Tests
 
@@ -43,3 +43,19 @@ pnpm build
 ```
 
 The build output goes to `dist/`.
+
+## Deployment
+
+The app is served from GitHub Pages at `https://mabian.github.io/shelf-esteem/`. Every push to
+`main` builds and deploys it (`.github/workflows/deploy.yml`). The path it is served under is
+`BASE_HREF` in that workflow.
+
+In production the app fetches the feed through a Cloudflare Worker (`goodreads-proxy/`), which
+forwards only shelf RSS requests to Goodreads and adds a CORS header for the app's origin. Its URL
+is `goodreadsUrl` in `src/environments/environment.ts`, the allowed origin is `ALLOWED_ORIGIN` in
+`goodreads-proxy/wrangler.toml`. Deploy it with:
+
+```bash
+pnpm wrangler login
+pnpm deploy:proxy
+```
