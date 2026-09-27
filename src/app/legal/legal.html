@@ -1,0 +1,48 @@
+<dialog #dialog class="legal-dialog" (click)="close()">
+  <div class="legal-panel" [attr.lang]="language()" (click)="$event.stopPropagation()">
+    <header class="legal-header">
+      <h2 class="legal-title">{{ title() }}</h2>
+
+      <div class="legal-languages" role="group" aria-label="Language">
+        @for (option of languages; track option.code) {
+          <button
+            class="legal-language"
+            type="button"
+            [attr.aria-pressed]="language() === option.code"
+            (click)="language.set(option.code)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+    </header>
+
+    @if (topic() === 'imprint') {
+      <address class="legal-address">
+        @for (line of imprint.address; track line) {
+          <span>{{ line }}</span>
+        }
+      </address>
+
+      <p class="legal-contact">
+        <a [href]="'mailto:' + imprint.email">{{ imprint.email }}</a>
+        <a [href]="imprint.secondContactUrl" target="_blank" rel="noopener">
+          {{ imprintText().secondContact }}
+        </a>
+      </p>
+
+      <p class="legal-note">{{ imprintText().note }}</p>
+    } @else {
+      @for (section of privacyText().sections; track section.heading) {
+        <section class="legal-section">
+          <h3 class="legal-section-heading">{{ section.heading }}</h3>
+          @for (paragraph of section.paragraphs; track paragraph) {
+            <p class="legal-paragraph">{{ paragraph }}</p>
+          }
+        </section>
+      }
+    }
+
+    <button class="legal-close" type="button" (click)="close()">Close</button>
+  </div>
+</dialog>

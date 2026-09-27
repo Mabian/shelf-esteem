@@ -1,7 +1,13 @@
 .shelf-page {
+  display: flex;
+  flex-direction: column;
   min-height: 100dvh;
   background: var(--bookcase-page);
   transition: background-color 0.3s;
+
+  .shelf-page-main {
+    flex: 1;
+  }
 
   .shelf-page-content {
     display: grid;

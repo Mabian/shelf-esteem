@@ -1,8 +1,14 @@
 .shelf-lookup-page {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
   min-height: 100dvh;
-  padding: 1rem;
+
+  .shelf-lookup-main {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    padding: 1rem;
+  }
 }
 
 .shelf-lookup {

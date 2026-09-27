@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  color: var(--color-ink-muted);
+  font-size: 0.8rem;
+
+  .app-footer-legal {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .app-footer-link {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-ink);
+    }
+  }
+
+  .app-footer-github {
+    display: inline-flex;
+    color: inherit;
+
+    &:hover {
+      color: var(--color-ink);
+    }
+  }
+
+  .app-footer-link,
+  .app-footer-github {
+    &:focus-visible {
+      outline: 3px solid var(--color-accent);
+      outline-offset: 3px;
+      border-radius: 0.4rem;
+    }
+  }
+}

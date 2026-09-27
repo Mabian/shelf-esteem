@@ -1,0 +1,132 @@
+.legal-dialog {
+  max-width: min(42rem, calc(100vw - 2rem));
+  // The panel scrolls instead of the dialog, inset far enough that its scrollbar stays clear of
+  // the rounded corners
+  padding: 0.75rem;
+  overflow: hidden;
+  border: 0;
+  border-radius: 1.75rem;
+  background: var(--color-card);
+  color: var(--color-ink);
+  box-shadow: 0 20px 50px -20px rgb(60 50 150 / 35%);
+
+  &::backdrop {
+    background: rgb(38 33 74 / 55%);
+  }
+
+  .legal-panel {
+    max-height: calc(100dvh - 5.5rem);
+    padding: 1rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .legal-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-block-end: 1.25rem;
+  }
+
+  .legal-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  .legal-languages {
+    display: flex;
+    overflow: hidden;
+    border: 2px solid var(--color-border);
+    border-radius: 999px;
+  }
+
+  .legal-language {
+    padding: 0.25rem 0.7rem;
+    border: 0;
+    background: transparent;
+    color: var(--color-ink-muted);
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+
+    &[aria-pressed='true'] {
+      background: var(--color-ink);
+      color: var(--color-card);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--color-accent);
+      outline-offset: -3px;
+    }
+  }
+
+  .legal-address {
+    display: flex;
+    flex-direction: column;
+    font-style: normal;
+    line-height: 1.6;
+  }
+
+  .legal-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0 0;
+  }
+
+  .legal-note {
+    margin: 1.25rem 0 0;
+    color: var(--color-ink-muted);
+    font-size: 0.85rem;
+  }
+
+  .legal-section {
+    margin-block-start: 1.5rem;
+  }
+
+  .legal-section-heading {
+    margin: 0 0 0.4rem;
+    font-size: 1rem;
+  }
+
+  .legal-paragraph {
+    margin: 0 0 0.6rem;
+    color: var(--color-ink-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .legal-close {
+    margin-block-start: 1.75rem;
+    padding: 0.5rem 1.25rem;
+    border: 2px solid var(--color-border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-ink-muted);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-ink);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--color-accent);
+      outline-offset: 3px;
+    }
+  }
+
+  a {
+    color: var(--color-accent);
+    text-underline-offset: 3px;
+  }
+}

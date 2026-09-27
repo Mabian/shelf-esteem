@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { Router } from '@angular/router';
+import { Footer } from '../footer/footer';
 
 @Component({
   selector: 'app-shelf-lookup',
-  imports: [FormField, FormRoot],
+  imports: [FormField, FormRoot, Footer],
   templateUrl: './shelf-lookup.html',
   styleUrl: './shelf-lookup.scss',
 })

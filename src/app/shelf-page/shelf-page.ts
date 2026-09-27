@@ -11,13 +11,14 @@ import {
 } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import type { BookView } from '../book-view/book-view';
+import { Footer } from '../footer/footer';
 import { GoodreadsService } from '../goodreads.service';
 import { ShelfBook } from '../shelf-book/shelf-book';
 import { groupByYear } from './year-groups';
 
 @Component({
   selector: 'app-shelf-page',
-  imports: [RouterLink, RouterOutlet, ShelfBook],
+  imports: [RouterLink, RouterOutlet, ShelfBook, Footer],
   templateUrl: './shelf-page.html',
   styleUrl: './shelf-page.scss',
 })
