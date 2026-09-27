@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../environments/environment';
 
 export interface Book {
   id: string;
@@ -58,7 +59,7 @@ export class GoodreadsService {
 
   private async fetchPage(userId: string, page: number): Promise<Document> {
     const xml = await firstValueFrom(
-      this.http.get(`/goodreads/review/list_rss/${encodeURIComponent(userId)}`, {
+      this.http.get(`${environment.goodreadsUrl}/review/list_rss/${encodeURIComponent(userId)}`, {
         params: { shelf: 'read', per_page: PAGE_SIZE, page },
         responseType: 'text',
       }),

@@ -1,6 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { environment } from '../environments/environment';
 import { GoodreadsService } from './goodreads.service';
 
 const LONG_SHIPS = `<item>
@@ -45,7 +46,7 @@ describe('GoodreadsService', () => {
   function expectPage(page: number) {
     return http.expectOne(
       (req) =>
-        req.url === '/goodreads/review/list_rss/42' &&
+        req.url === `${environment.goodreadsUrl}/review/list_rss/42` &&
         req.params.get('shelf') === 'read' &&
         req.params.get('page') === String(page),
     );
