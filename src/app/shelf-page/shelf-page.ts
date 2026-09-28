@@ -84,9 +84,15 @@ export class ShelfPage {
     if (!error) {
       return undefined;
     }
-    return error instanceof HttpErrorResponse && error.status === 404
-      ? 'No Goodreads user found with that ID.'
-      : 'Could not load the shelf. Please try again.';
+    const status = error instanceof HttpErrorResponse ? error.status : undefined;
+    if (status === 404) {
+      return 'No Goodreads user found with that ID.';
+    }
+    // Goodreads refuses the feed of profiles set to private (friends only)
+    if (status === 401) {
+      return 'This Goodreads profile is private, so its shelf cannot be shown.';
+    }
+    return 'Could not load the shelf. Please try again.';
   });
 
   protected readonly bookOpen = signal(false);
