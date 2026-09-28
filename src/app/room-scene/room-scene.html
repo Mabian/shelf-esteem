@@ -1,0 +1,202 @@
+<div class="room-scene-window">
+  <div class="room-scene-pane">
+    <svg class="room-scene-view" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+      @switch (room()) {
+        @case ('day') {
+          <defs>
+            <linearGradient id="room-scene-day-sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#7cc6f2" />
+              <stop offset="1" stop-color="#d4efff" />
+            </linearGradient>
+          </defs>
+          <rect width="400" height="500" fill="url(#room-scene-day-sky)" />
+          <circle cx="310" cy="90" r="54" fill="#fff6c4" opacity="0.4" />
+          <circle cx="310" cy="90" r="34" fill="#ffe27a" />
+          <g class="room-scene-cloud" fill="#ffffff">
+            <ellipse cx="90" cy="120" rx="46" ry="18" />
+            <ellipse cx="70" cy="108" rx="24" ry="18" />
+            <ellipse cx="104" cy="102" rx="28" ry="22" />
+          </g>
+          <g class="room-scene-cloud room-scene-cloud-slow" fill="#ffffff" opacity="0.85">
+            <ellipse cx="250" cy="200" rx="40" ry="14" />
+            <ellipse cx="236" cy="190" rx="20" ry="14" />
+            <ellipse cx="262" cy="186" rx="22" ry="17" />
+          </g>
+          <path d="M0 360 Q100 300 200 340 T400 320 V500 H0 Z" fill="#a8d88f" />
+          <path d="M0 420 Q120 370 260 410 T400 400 V500 H0 Z" fill="#7cc36d" />
+          <path d="M91 403 C95 385 96 362 94 342 L101 342 C100 362 102 385 107 403 Z" fill="#7a4e30" />
+          <path d="M132.4 339.3 A11.5 11.5 0 0 1 120.6 353.5 A12.7 12.7 0 0 1 102.9 363.9 A13.3 13.3 0 0 1 82.7 356.9 A12.8 12.8 0 0 1 66.5 344.2 A11.5 11.5 0 0 1 74.6 327.5 A11.4 11.4 0 0 1 86.3 313.3 A13.5 13.5 0 0 1 108.1 312.7 A13.2 13.2 0 0 1 127.5 321.5 A11.4 11.4 0 0 1 132.4 339.3 Z" fill="#3f8a3d" />
+          <path d="M130 331 A11.4 11.4 0 0 1 119.8 346.3 A12.9 12.9 0 0 1 103.1 358.7 A13.6 13.6 0 0 1 82.7 350.8 A12.8 12.8 0 0 1 65 340.3 A11.2 11.2 0 0 1 68.1 322.6 A12.3 12.3 0 0 1 78.8 305.9 A14.5 14.5 0 0 1 102.2 307.6 A13.1 13.1 0 0 1 122.3 314 A11.6 11.6 0 0 1 130 331 Z" fill="#4f9d4a" />
+          <path d="M103.4 324.9 A7.9 7.9 0 0 1 92.3 331 A9.1 9.1 0 0 1 77.6 330.4 A7 7 0 0 1 75.7 319.4 A7.7 7.7 0 0 1 85.1 311.3 A8.3 8.3 0 0 1 97.9 315.4 A6.8 6.8 0 0 1 103.4 324.9 Z" fill="#66b35c" />
+        }
+        @case ('city') {
+          <defs>
+            <linearGradient id="room-scene-city-sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#0b0d2b" />
+              <stop offset="0.6" stop-color="#2e2560" />
+              <stop offset="1" stop-color="#5a3b78" />
+            </linearGradient>
+            <pattern
+              id="room-scene-city-windows"
+              width="112"
+              height="100"
+              patternUnits="userSpaceOnUse"
+              fill="#e8b86a"
+            >
+              <rect x="20" y="5" width="7" height="9" />
+              <rect x="84" y="5" width="7" height="9" />
+              <rect x="52" y="25" width="7" height="9" />
+              <rect x="4" y="45" width="7" height="9" />
+              <rect x="100" y="45" width="7" height="9" />
+              <rect x="36" y="65" width="7" height="9" />
+              <rect x="68" y="65" width="7" height="9" />
+              <rect x="20" y="85" width="7" height="9" />
+            </pattern>
+            <g id="room-scene-city-near">
+              <rect x="0" y="320" width="62" height="180" />
+              <rect x="66" y="240" width="60" height="260" />
+              <rect x="130" y="320" width="76" height="180" />
+              <rect x="210" y="200" width="60" height="300" />
+              <rect x="274" y="280" width="76" height="220" />
+              <rect x="354" y="260" width="46" height="240" />
+            </g>
+          </defs>
+          <rect width="400" height="500" fill="url(#room-scene-city-sky)" />
+          <g fill="#ffffff" opacity="0.8">
+            <circle cx="40" cy="40" r="1.2" />
+            <circle cx="120" cy="80" r="1" />
+            <circle cx="180" cy="30" r="1.4" />
+            <circle cx="230" cy="110" r="1" />
+            <circle cx="370" cy="140" r="1.2" />
+            <circle cx="60" cy="150" r="1" />
+            <circle cx="260" cy="50" r="1" />
+          </g>
+          <circle cx="320" cy="80" r="22" fill="#fdf3c8" />
+          <g class="room-scene-plane">
+            <circle cx="-20" cy="70" r="1.6" fill="#ffffff" />
+            <circle cx="-24" cy="70.5" r="1.2" fill="#ff6b6b" />
+          </g>
+          <g fill="#25224f">
+            <rect x="18" y="220" width="60" height="280" />
+            <rect x="82" y="180" width="60" height="320" />
+            <rect x="146" y="240" width="76" height="260" />
+            <rect x="242" y="160" width="60" height="340" />
+            <rect x="306" y="220" width="60" height="280" />
+            <rect x="370" y="200" width="30" height="300" />
+          </g>
+          <use href="#room-scene-city-near" fill="#14142e" />
+          <use href="#room-scene-city-near" fill="url(#room-scene-city-windows)" opacity="0.75" />
+          <rect x="239" y="186" width="2" height="14" fill="#14142e" />
+          <circle class="room-scene-beacon" cx="240" cy="185" r="2.5" fill="#ff4d4d" />
+        }
+        @case ('snow') {
+          <defs>
+            <linearGradient id="room-scene-snow-sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#b7c6d8" />
+              <stop offset="1" stop-color="#e9eff6" />
+            </linearGradient>
+            <g id="room-scene-pine">
+              <rect x="-3" y="-2" width="6" height="10" fill="#5b3b27" />
+              <path d="M0 -80 Q3.9 -63.1 13 -54 Q8.7 -49 4.3 -54 Q0 -49 -4.3 -54 Q-8.7 -49 -13 -54 Q-3.9 -63.1 0 -80 Z" fill="#2f5d4f" />
+              <path d="M0 -80 Q3.9 -63.1 13 -54 Q8.7 -49 4.3 -54 Q2.2 -51.5 0 -51.5 Z" fill="#244a3f" />
+              <path d="M13 -54 Q8.7 -49 4.3 -54 Q0 -49 -4.3 -54 Q-8.7 -49 -13 -54 Q-8.7 -57 -4.3 -54 Q0 -57 4.3 -54 Q8.7 -57 13 -54 Z" fill="#ffffff" />
+              <path d="M0 -64 Q5.7 -45.8 19 -36 Q12.7 -31 6.3 -36 Q0 -31 -6.3 -36 Q-12.7 -31 -19 -36 Q-5.7 -45.8 0 -64 Z" fill="#2f5d4f" />
+              <path d="M0 -64 Q5.7 -45.8 19 -36 Q12.7 -31 6.3 -36 Q3.2 -33.5 0 -33.5 Z" fill="#244a3f" />
+              <path d="M19 -36 Q12.7 -31 6.3 -36 Q0 -31 -6.3 -36 Q-12.7 -31 -19 -36 Q-12.7 -39 -6.3 -36 Q0 -39 6.3 -36 Q12.7 -39 19 -36 Z" fill="#ffffff" />
+              <path d="M0 -48 Q7.5 -28.5 25 -18 Q16.7 -13 8.3 -18 Q0 -13 -8.3 -18 Q-16.7 -13 -25 -18 Q-7.5 -28.5 0 -48 Z" fill="#2f5d4f" />
+              <path d="M0 -48 Q7.5 -28.5 25 -18 Q16.7 -13 8.3 -18 Q4.2 -15.5 0 -15.5 Z" fill="#244a3f" />
+              <path d="M25 -18 Q16.7 -13 8.3 -18 Q0 -13 -8.3 -18 Q-16.7 -13 -25 -18 Q-16.7 -21 -8.3 -18 Q0 -21 8.3 -18 Q16.7 -21 25 -18 Z" fill="#ffffff" />
+              <path d="M0 -32 Q9.3 -11.2 31 0 Q20.7 5 10.3 0 Q0 5 -10.3 0 Q-20.7 5 -31 0 Q-9.3 -11.2 0 -32 Z" fill="#2f5d4f" />
+              <path d="M0 -32 Q9.3 -11.2 31 0 Q20.7 5 10.3 0 Q5.2 2.5 0 2.5 Z" fill="#244a3f" />
+              <path d="M31 0 Q20.7 5 10.3 0 Q0 5 -10.3 0 Q-20.7 5 -31 0 Q-20.7 -3 -10.3 0 Q0 -3 10.3 0 Q20.7 -3 31 0 Z" fill="#ffffff" />
+              <path d="M0 -81 Q3 -76 5 -71 Q0 -73 -5 -71 Q-3 -76 0 -81 Z" fill="#ffffff" />
+            </g>
+          </defs>
+          <rect width="400" height="500" fill="url(#room-scene-snow-sky)" />
+          <path d="M0 350 Q120 300 240 340 T400 330 V500 H0 Z" fill="#eef3f9" />
+          <use href="#room-scene-pine" transform="translate(60 370)" />
+          <use href="#room-scene-pine" transform="translate(112 362) scale(1.2)" />
+          <use href="#room-scene-pine" transform="translate(150 368) scale(0.7)" />
+          <use href="#room-scene-pine" transform="translate(330 375) scale(0.9)" />
+          <path d="M0 420 Q140 380 280 415 T400 405 V500 H0 Z" fill="#dde6f0" />
+          <path d="M0 440 Q160 405 300 435 T400 430 V500 H0 Z" fill="#ffffff" />
+          <use href="#room-scene-pine" transform="translate(250 440) scale(1.1)" />
+          <g fill="#ffffff">
+            @for (flake of flakes; track $index) {
+              <circle
+                class="room-scene-flake"
+                [attr.cx]="flake.x"
+                cy="-10"
+                [attr.r]="flake.r"
+                [style.animation-duration.s]="flake.duration"
+                [style.animation-delay.s]="flake.delay"
+              />
+            }
+          </g>
+        }
+        @case ('beach') {
+          <defs>
+            <linearGradient id="room-scene-beach-sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#6fcbee" />
+              <stop offset="1" stop-color="#e6f7fd" />
+            </linearGradient>
+            <linearGradient id="room-scene-beach-sea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#1f8fc2" />
+              <stop offset="1" stop-color="#4fc3e3" />
+            </linearGradient>
+          </defs>
+          <rect width="400" height="500" fill="url(#room-scene-beach-sky)" />
+          <circle cx="110" cy="110" r="46" fill="#fff6c4" opacity="0.5" />
+          <circle cx="110" cy="110" r="30" fill="#fff1a8" />
+          <rect y="270" width="400" height="140" fill="url(#room-scene-beach-sea)" />
+          <g class="room-scene-glints" fill="#ffffff">
+            <rect x="96" y="284" width="26" height="2" />
+            <rect x="88" y="300" width="18" height="2" />
+            <rect x="114" y="312" width="22" height="2" />
+            <rect x="100" y="326" width="14" height="2" />
+          </g>
+          <g fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.7">
+            <path
+              class="room-scene-wave"
+              d="M-100 345 q25 -8 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0"
+            />
+            <path
+              class="room-scene-wave room-scene-wave-slow"
+              d="M-100 375 q25 -8 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0"
+            />
+          </g>
+          <path d="M0 400 Q200 380 400 395 V500 H0 Z" fill="#f1d7a0" />
+          <path d="M0 400 Q200 380 400 395" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.8" />
+          <path d="M294 482 C287 430 291 360 308 302 L316 302 C301 360 305 430 312 482 Z" fill="#9a6b3c" />
+          <path
+            d="M292.8 468.6 Q301.4 471.6 310 468.6 M292 454.6 Q300.1 457.6 308.3 454.6 M291.5 440.1 Q299.2 443.1 307 440.1 M291.3 425.1 Q298.7 428.1 306 425.1 M291.6 409.8 Q298.5 412.8 305.5 409.8 M292.4 394.2 Q298.9 397.2 305.4 394.2 M293.6 378.6 Q299.7 381.6 305.8 378.6 M295.3 362.9 Q301 365.9 306.7 362.9 M297.6 347.3 Q302.9 350.3 308.1 347.3 M300.5 331.9 Q305.3 334.9 310.1 331.9 M303.9 316.7 Q308.3 319.7 312.7 316.7"
+            fill="none"
+            stroke="#76502c"
+            stroke-width="1.5"
+          />
+          <g fill="#2f7d47">
+            <path d="M312 300 Q300.5 258 257 260 Q288.5 274.5 312 300 Z" />
+            <path d="M312 300 Q323.5 258 367 260 Q335.5 274.5 312 300 Z" />
+            <path d="M312 300 Q293.4 269 312 238 Q308.3 269 312 300 Z" />
+          </g>
+          <g fill="#3f9a5a">
+            <path d="M312 300 Q266.8 272.7 234 314 Q271 296.1 312 300 Z" />
+            <path d="M312 300 Q268.8 305 262 348 Q282.2 319 312 300 Z" />
+            <path d="M312 300 Q354.4 271.6 388 310 Q351.4 294.4 312 300 Z" />
+            <path d="M312 300 Q357 305.2 364 350 Q343 319.8 312 300 Z" />
+          </g>
+          <path d="M312 300 Q268.9 284.4 234 314 M312 300 Q275.5 312 262 348 M312 300 Q352.9 283 388 310 M312 300 Q350 312.5 364 350" fill="none" stroke="#2f7d47" stroke-width="1.5" />
+          <g fill="#6b4a2b">
+            <circle cx="306" cy="304" r="5" />
+            <circle cx="317" cy="305" r="5" />
+            <circle cx="311" cy="310" r="4.5" />
+          </g>
+        }
+      }
+    </svg>
+  </div>
+  <div class="room-scene-sill"></div>
+  <div class="room-scene-curtain room-scene-curtain-left"></div>
+  <div class="room-scene-curtain room-scene-curtain-right"></div>
+  <div class="room-scene-rod"></div>
+</div>

@@ -13,12 +13,13 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import type { BookView } from '../book-view/book-view';
 import { Footer } from '../footer/footer';
 import { GoodreadsService } from '../goodreads.service';
+import { RoomScene } from '../room-scene/room-scene';
 import { ShelfBook } from '../shelf-book/shelf-book';
 import { groupByYear } from './year-groups';
 
 @Component({
   selector: 'app-shelf-page',
-  imports: [RouterLink, RouterOutlet, ShelfBook, Footer],
+  imports: [RouterLink, RouterOutlet, ShelfBook, Footer, RoomScene],
   templateUrl: './shelf-page.html',
   styleUrl: './shelf-page.scss',
 })
@@ -35,6 +36,27 @@ export class ShelfPage {
     { value: 'white', label: 'White', swatch: '#fbfbfd' },
   ];
   protected readonly bookcase = signal('walnut');
+  protected readonly rooms = [
+    {
+      value: 'day',
+      label: 'Daylight',
+      swatch:
+        'radial-gradient(circle at 68% 32%, #ffe27a 18%, transparent 21%), linear-gradient(#7cc6f2 60%, #7cc36d 60%)',
+    },
+    {
+      value: 'city',
+      label: 'City night',
+      swatch:
+        'radial-gradient(circle at 68% 30%, #fdf3c8 14%, transparent 17%), linear-gradient(#2e2560 55%, #ffd88a 55% 62%, #14142e 62%)',
+    },
+    { value: 'snow', label: 'Snow', swatch: 'linear-gradient(#b7c6d8 55%, #ffffff 55%)' },
+    {
+      value: 'beach',
+      label: 'Beach',
+      swatch: 'linear-gradient(#6fcbee 42%, #1f8fc2 42% 68%, #f1d7a0 68%)',
+    },
+  ];
+  protected readonly room = signal('day');
   protected readonly newShelfPerYear = signal(false);
 
   protected readonly shelf = resource({

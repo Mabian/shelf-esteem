@@ -1,0 +1,225 @@
+:host {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0 3rem,
+      color-mix(in oklab, var(--room-wall-shadow), transparent 82%) 3rem 6rem),
+    radial-gradient(80rem 48rem at 80% 0%, var(--room-glow), transparent),
+    linear-gradient(transparent calc(100% - 30rem), var(--room-wall-shadow));
+  background-color: var(--room-wall);
+  transition: background-color 0.3s;
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation: none !important;
+    }
+  }
+}
+
+.room-scene-window {
+  --room-scene-frame: color-mix(in oklab, var(--room-wall), #fff 65%);
+  --room-scene-pane-top: 2.25rem;
+  --room-scene-rod-top: 1.25rem;
+  --room-scene-curtain-overhang: 2rem;
+
+  position: absolute;
+  top: 0;
+  left: var(--room-window-left);
+  width: var(--room-window-width);
+  height: calc(
+    var(--room-scene-pane-top) + var(--room-scene-curtain-overhang) +
+      min(var(--room-window-width) * 4 / 3, 100dvh - 12rem)
+  );
+
+  // Same breakpoint as the content shift in ShelfPage, narrower screens only show the wall
+  @media (width < 75rem) {
+    display: none;
+  }
+
+  .room-scene-pane {
+    position: absolute;
+    top: var(--room-scene-pane-top);
+    right: 0;
+    bottom: var(--room-scene-curtain-overhang);
+    left: 0;
+    overflow: hidden;
+    border: 14px solid var(--room-scene-frame);
+    border-radius: 6px;
+    box-shadow:
+      inset 0 0 0 3px rgb(0 0 0 / 10%),
+      0 18px 40px -20px rgb(0 0 0 / 45%);
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      background: var(--room-scene-frame);
+    }
+
+    &::before {
+      top: 0;
+      bottom: 0;
+      left: calc(50% - 5px);
+      width: 10px;
+    }
+
+    &::after {
+      top: calc(45% - 5px);
+      right: 0;
+      left: 0;
+      height: 10px;
+    }
+  }
+
+  .room-scene-view {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .room-scene-sill {
+    position: absolute;
+    bottom: calc(var(--room-scene-curtain-overhang) - 12px);
+    right: -24px;
+    left: -24px;
+    height: 16px;
+    background: var(--room-scene-frame);
+    border-radius: 3px;
+    box-shadow: 0 8px 14px -8px rgb(0 0 0 / 40%);
+  }
+
+  .room-scene-curtain {
+    position: absolute;
+    top: var(--room-scene-rod-top);
+    bottom: 0;
+    width: 22%;
+    background: repeating-linear-gradient(90deg,
+      color-mix(in oklab, var(--room-wall), #000 22%) 0 14px,
+      color-mix(in oklab, var(--room-wall), #000 32%) 14px 22px);
+    box-shadow: 0 10px 24px -12px rgb(0 0 0 / 50%);
+  }
+
+  .room-scene-curtain-left {
+    left: -12%;
+    border-radius: 0 0 40% 0;
+  }
+
+  .room-scene-curtain-right {
+    right: -12%;
+    border-radius: 0 0 0 40%;
+  }
+
+  .room-scene-rod {
+    --room-scene-rod-color: color-mix(in oklab, var(--room-wall), #000 55%);
+
+    position: absolute;
+    top: calc(var(--room-scene-rod-top) - 3px);
+    right: -14%;
+    left: -14%;
+    height: 6px;
+    background: var(--room-scene-rod-color);
+    border-radius: 3px;
+    box-shadow: 0 3px 5px -2px rgb(0 0 0 / 40%);
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      width: 12px;
+      height: 12px;
+      background: var(--room-scene-rod-color);
+      border-radius: 50%;
+    }
+
+    &::before {
+      left: -6px;
+    }
+
+    &::after {
+      right: -6px;
+    }
+  }
+}
+
+.room-scene-cloud {
+  animation: room-scene-drift 40s ease-in-out infinite alternate;
+}
+
+.room-scene-cloud-slow {
+  animation-duration: 60s;
+  animation-direction: alternate-reverse;
+}
+
+.room-scene-plane {
+  animation: room-scene-fly 45s linear infinite;
+}
+
+.room-scene-beacon {
+  animation: room-scene-pulse 3.5s ease-in-out infinite;
+}
+
+.room-scene-flake {
+  animation: room-scene-fall linear infinite;
+}
+
+.room-scene-glints rect {
+  animation: room-scene-glint 3s ease-in-out infinite;
+
+  &:nth-child(2n) {
+    animation-delay: -1.5s;
+  }
+}
+
+.room-scene-wave {
+  animation: room-scene-swell 6s ease-in-out infinite alternate;
+}
+
+.room-scene-wave-slow {
+  animation-duration: 8s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes room-scene-drift {
+  to {
+    transform: translateX(60px);
+  }
+}
+
+@keyframes room-scene-fly {
+  to {
+    transform: translate(450px, -24px);
+  }
+}
+
+@keyframes room-scene-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes room-scene-fall {
+  to {
+    transform: translate(-30px, 530px);
+  }
+}
+
+@keyframes room-scene-glint {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes room-scene-swell {
+  to {
+    transform: translate(50px, 4px);
+  }
+}

@@ -1,4 +1,5 @@
-<div class="shelf-page" [attr.data-bookcase]="bookcase()">
+<div class="shelf-page" [attr.data-bookcase]="bookcase()" [attr.data-room]="room()">
+  <app-room-scene [room]="room()" />
   <main class="shelf-page-main">
     <div class="shelf-page-content" [inert]="bookOpen()">
       <header class="shelf-page-header">
@@ -11,11 +12,13 @@
           }
         </h1>
 
+        <a class="shelf-page-back" routerLink="/">Look up another shelf</a>
+
         <div class="shelf-page-options">
           <fieldset class="shelf-page-picker">
             <legend>Bookcase</legend>
             @for (option of bookcases; track option.value) {
-              <label class="shelf-page-choice">
+              <label class="shelf-page-choice" [title]="option.label">
                 <input
                   type="radio"
                   name="bookcase"
@@ -24,7 +27,24 @@
                   (change)="bookcase.set(option.value)"
                 />
                 <span class="shelf-page-swatch" [style.background]="option.swatch"></span>
-                {{ option.label }}
+                <span class="sr-only">{{ option.label }}</span>
+              </label>
+            }
+          </fieldset>
+
+          <fieldset class="shelf-page-picker">
+            <legend>Room</legend>
+            @for (option of rooms; track option.value) {
+              <label class="shelf-page-choice" [title]="option.label">
+                <input
+                  type="radio"
+                  name="room"
+                  [value]="option.value"
+                  [checked]="room() === option.value"
+                  (change)="room.set(option.value)"
+                />
+                <span class="shelf-page-swatch" [style.background]="option.swatch"></span>
+                <span class="sr-only">{{ option.label }}</span>
               </label>
             }
           </fieldset>
@@ -52,7 +72,6 @@
           </fieldset>
         </div>
 
-        <a class="shelf-page-back" routerLink="/">Look up another shelf</a>
       </header>
 
       <div class="shelf-page-case">
@@ -94,5 +113,7 @@
     <router-outlet (activate)="onBookOpened($event)" (deactivate)="onBookClosed()" />
   </main>
 
-  <app-footer [inert]="bookOpen()" />
+  <div class="shelf-page-floor">
+    <app-footer [inert]="bookOpen()" />
+  </div>
 </div>

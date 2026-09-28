@@ -32,7 +32,6 @@
 
 // Bookcase palettes, picked on the shelf page
 [data-bookcase='walnut'] {
-  --bookcase-page: #ece6e1;
   --bookcase-frame: #5a3a26;
   --bookcase-frame-edge: #432a1b;
   --bookcase-wall: #4a3122;
@@ -47,7 +46,6 @@
 }
 
 [data-bookcase='oak'] {
-  --bookcase-page: #f2ece4;
   --bookcase-frame: #c3915a;
   --bookcase-frame-edge: #a8773f;
   --bookcase-wall: #e6caa0;
@@ -62,7 +60,6 @@
 }
 
 [data-bookcase='lavender'] {
-  --bookcase-page: #ebe8fb;
   --bookcase-frame: #cfc6f7;
   --bookcase-frame-edge: #b9adf0;
   --bookcase-wall: #f4f1ff;
@@ -77,7 +74,6 @@
 }
 
 [data-bookcase='white'] {
-  --bookcase-page: #e8ebf0;
   --bookcase-frame: #fbfbfd;
   --bookcase-frame-edge: #dde1e8;
   --bookcase-wall: #eef0f4;
@@ -89,6 +85,54 @@
   --bookcase-divider: #26214a;
   --bookcase-divider-ink: #ffffff;
   --bookcase-focus: #4b3fc4;
+}
+
+[data-room='day'] {
+  --room-wall: #efe6d8;
+  --room-wall-shadow: #d6c7b0;
+  --room-glow: rgb(255 244 214 / 70%);
+  --room-ink: #26214a;
+  --room-ink-muted: #5a5480;
+  --room-link: #4b3fc4;
+  --room-floor: #7a5639;
+  --room-floor-ink: #fff8ee;
+  --room-floor-ink-muted: #f1e2cf;
+}
+
+[data-room='city'] {
+  --room-wall: #2d2942;
+  --room-wall-shadow: #16131f;
+  --room-glow: rgb(255 184 96 / 24%);
+  --room-ink: #f6f1e7;
+  --room-ink-muted: #cbc4de;
+  --room-link: #ffcc3d;
+  --room-floor: #3b2c26;
+  --room-floor-ink: #f6f1e7;
+  --room-floor-ink-muted: #d9cfc4;
+}
+
+[data-room='snow'] {
+  --room-wall: #e3e9f0;
+  --room-wall-shadow: #bcc7d4;
+  --room-glow: rgb(255 255 255 / 60%);
+  --room-ink: #26214a;
+  --room-ink-muted: #545070;
+  --room-link: #4b3fc4;
+  --room-floor: #6f5443;
+  --room-floor-ink: #fff8ee;
+  --room-floor-ink-muted: #efe4d8;
+}
+
+[data-room='beach'] {
+  --room-wall: #dcefe9;
+  --room-wall-shadow: #b0d4cb;
+  --room-glow: rgb(255 238 196 / 65%);
+  --room-ink: #26214a;
+  --room-ink-muted: #4f5073;
+  --room-link: #4034b0;
+  --room-floor: #7d6247;
+  --room-floor-ink: #fff8ee;
+  --room-floor-ink-muted: #f3e8d6;
 }
 
 * {

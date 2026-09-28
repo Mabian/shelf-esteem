@@ -8,7 +8,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.5rem;
-  color: var(--color-ink-muted);
+  color: var(--room-ink-muted, var(--color-ink-muted));
   font-size: 0.8rem;
 
   .app-footer-legal {
@@ -28,7 +28,7 @@
     cursor: pointer;
 
     &:hover {
-      color: var(--color-ink);
+      color: var(--room-ink, var(--color-ink));
     }
   }
 
@@ -37,14 +37,14 @@
     color: inherit;
 
     &:hover {
-      color: var(--color-ink);
+      color: var(--room-ink, var(--color-ink));
     }
   }
 
   .app-footer-link,
   .app-footer-github {
     &:focus-visible {
-      outline: 3px solid var(--color-accent);
+      outline: 3px solid var(--room-link, var(--color-accent));
       outline-offset: 3px;
       border-radius: 0.4rem;
     }
