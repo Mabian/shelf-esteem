@@ -9,7 +9,8 @@ import {
   resource,
   signal,
 } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationStart, Router, RouterLink, RouterOutlet } from '@angular/router';
 import type { BookView } from '../book-view/book-view';
 import { Footer } from '../footer/footer';
 import { GoodreadsService } from '../goodreads.service';
@@ -26,6 +27,7 @@ import { groupByYear } from './year-groups';
 export class ShelfPage {
   private readonly goodreadsService = inject(GoodreadsService);
   private readonly injector = inject(Injector);
+  private readonly router = inject(Router);
 
   readonly userId = input.required<string>();
 
@@ -77,11 +79,23 @@ export class ShelfPage {
   });
 
   protected readonly bookOpen = signal(false);
+  // Unlike bookOpen, already false when the navigation back starts, so the shelf is painted before
+  // the view transition captures its old state instead of in the middle of the morph
+  protected readonly shelfCovered = signal(false);
   protected readonly selectedId = signal<string | undefined>(undefined);
+
+  constructor() {
+    this.router.events.pipe(takeUntilDestroyed()).subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.shelfCovered.set(false);
+      }
+    });
+  }
 
   protected onBookOpened(view: BookView): void {
     this.selectedId.set(view.bookId());
     this.bookOpen.set(true);
+    this.shelfCovered.set(true);
   }
 
   protected onBookClosed(): void {

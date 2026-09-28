@@ -34,16 +34,17 @@ export class BookView {
 
   private readonly closeButton = viewChild.required<ElementRef<HTMLButtonElement>>('closeButton');
 
-  // Served from the cache the shelf page already filled
+  // Only needed when the book is opened by URL; from the shelf page it is already loaded
   private readonly shelf = resource({
     params: () => this.userId(),
     loader: ({ params }) => this.goodreadsService.fetchReadShelf(params),
   });
-  protected readonly book = computed(() =>
-    this.shelf.hasValue()
-      ? this.shelf.value().books.find((book) => book.id === this.bookId())
-      : undefined,
-  );
+  protected readonly book = computed(() => {
+    const shelf =
+      this.goodreadsService.loadedShelf(this.userId()) ??
+      (this.shelf.hasValue() ? this.shelf.value() : undefined);
+    return shelf?.books.find((book) => book.id === this.bookId());
+  });
 
   private readonly coverColor = resource({
     params: () => this.book()?.thumbnailUrl,
@@ -59,7 +60,12 @@ export class BookView {
   });
 
   constructor() {
-    afterNextRender(() => this.closeButton().nativeElement.focus());
+    afterNextRender(async () => {
+      // Focusing forces a style and layout pass over the whole shelf, which would hold up the
+      // view transition's start, so it waits until the morph into the cover is over
+      await document.activeViewTransition?.finished;
+      this.closeButton().nativeElement.focus();
+    });
     effect(() => {
       if (this.shelf.hasValue() && !this.book()) {
         this.router.navigate(['/shelf', this.userId()], { replaceUrl: true });

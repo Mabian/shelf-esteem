@@ -1,4 +1,9 @@
-<div class="shelf-page" [attr.data-bookcase]="bookcase()" [attr.data-room]="room()">
+<div
+  class="shelf-page"
+  [class.shelf-page-book-open]="shelfCovered()"
+  [attr.data-bookcase]="bookcase()"
+  [attr.data-room]="room()"
+>
   <app-room-scene [room]="room()" />
   <main class="shelf-page-main">
     <div class="shelf-page-content" [inert]="bookOpen()">
@@ -71,7 +76,6 @@
             </label>
           </fieldset>
         </div>
-
       </header>
 
       <div class="shelf-page-case">

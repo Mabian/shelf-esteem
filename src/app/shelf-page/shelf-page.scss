@@ -9,6 +9,15 @@
   --room-window-left: 3.5rem;
   --room-window-width: clamp(12rem, 17vw, 22rem);
 
+  // The opened book covers the page, not painting the spines beneath it keeps the morph into the cover from stuttering
+  &.shelf-page-book-open {
+    app-room-scene,
+    .shelf-page-content,
+    .shelf-page-floor {
+      visibility: hidden;
+    }
+  }
+
   .shelf-page-floor {
     display: flex;
     flex: 1;

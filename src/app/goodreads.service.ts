@@ -30,15 +30,24 @@ const PAGE_SIZE = 200;
 export class GoodreadsService {
   private readonly http = inject(HttpClient);
   private readonly shelves = new Map<string, Promise<ReadShelf>>();
+  private readonly loaded = new Map<string, ReadShelf>();
 
   fetchReadShelf(userId: string): Promise<ReadShelf> {
     let shelf = this.shelves.get(userId);
     if (!shelf) {
       shelf = this.download(userId);
-      shelf.catch(() => this.shelves.delete(userId));
+      shelf.then(
+        (loaded) => this.loaded.set(userId, loaded),
+        () => this.shelves.delete(userId),
+      );
       this.shelves.set(userId, shelf);
     }
     return shelf;
+  }
+
+  // Without waiting a tick, so the opened book is there in the view transition's first frame
+  loadedShelf(userId: string): ReadShelf | undefined {
+    return this.loaded.get(userId);
   }
 
   private async download(userId: string): Promise<ReadShelf> {

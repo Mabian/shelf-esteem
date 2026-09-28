@@ -72,6 +72,14 @@ describe('GoodreadsService', () => {
     });
   });
 
+  it('keeps a downloaded shelf at hand synchronously', async () => {
+    const result = goodreadsService.fetchReadShelf('42');
+    expect(goodreadsService.loadedShelf('42')).toBeUndefined();
+    expectPage(1).flush(feed("Otis 's bookshelf: read", LONG_SHIPS));
+    const shelf = await result;
+    expect(goodreadsService.loadedShelf('42')).toBe(shelf);
+  });
+
   it('falls back to the date added and zero pages', async () => {
     const result = goodreadsService.fetchReadShelf('42');
     expectPage(1).flush(feed("Ann's bookshelf: read", NO_READ_DATE));
