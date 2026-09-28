@@ -4,9 +4,16 @@
   align-items: flex-end;
   height: 178px;
   padding-bottom: 24px;
-  perspective: 420px;
   perspective-origin: 50% 70%;
-  transition: --shelf-book-color 0.6s ease;
+  // The 3D setup (here, on the box and on the pages) only applies while a book tips out, and
+  // lingers until it has tipped back: on every book at once it made the browser composite
+  // thousands of layers, which slowed down scrolling and hovering on big shelves. The raised
+  // z-index lingers just as long: a 3D book back in the middle of the paint order would push every
+  // spine painted after it onto a layer of its own
+  transition:
+    --shelf-book-color 0.6s ease,
+    perspective 0s 0.35s allow-discrete,
+    z-index 0s 0.35s allow-discrete;
 
   // shadow where the book stands on the plank
   &::before {
@@ -22,6 +29,8 @@
 
   &:has(.shelf-book-link:is(:hover, :focus-visible)) {
     z-index: 2;
+    perspective: 420px;
+    transition-delay: 0s;
 
     &::before {
       opacity: 0.6;
@@ -46,6 +55,13 @@
   &:is(:hover, :focus-visible) {
     .shelf-book-box {
       transform: translateZ(14px) rotateX(-34deg);
+      transform-style: preserve-3d;
+      transition-delay: 0s;
+    }
+
+    .shelf-book-pages {
+      display: block;
+      transition-delay: 0s;
     }
 
     .shelf-book-spine {
@@ -58,9 +74,10 @@
 .shelf-book-box {
   position: relative;
   display: block;
-  transform-style: preserve-3d;
   transform-origin: bottom center;
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform-style 0s 0.35s allow-discrete;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
@@ -89,14 +106,14 @@
     box-shadow 0.35s,
     filter 0.35s;
 
-  // Paper grain
+  // Paper grain. Its specks are black, so plain alpha darkens exactly like multiply would, without
+  // a blend for the GPU on every spine
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     background: var(--texture-paper);
     opacity: 0.32;
-    mix-blend-mode: multiply;
     pointer-events: none;
   }
 
@@ -169,6 +186,7 @@
 }
 
 .shelf-book-pages {
+  display: none;
   position: absolute;
   top: 0;
   left: 0;
@@ -180,4 +198,5 @@
     repeating-linear-gradient(90deg, #e6dcc4 0 1px, #f7f0df 1px 3px);
   transform: rotateX(-90deg);
   transform-origin: top center;
+  transition: display 0s 0.35s allow-discrete;
 }

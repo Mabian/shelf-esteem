@@ -12,9 +12,14 @@
   // The opened book covers the page, not painting the spines beneath it keeps the morph into the cover from stuttering
   &.shelf-page-book-open {
     app-room-scene,
-    .shelf-page-content,
     .shelf-page-floor {
       visibility: hidden;
+    }
+
+    // Unlike the inherited visibility, this skips the thousands of elements on a big shelf without
+    // restyling them, and takes them out of the tab order and the accessibility tree
+    .shelf-page-content {
+      content-visibility: hidden;
     }
   }
 
@@ -31,6 +36,10 @@
     max-width: 74rem;
     margin: 0 auto;
     padding: 2.25rem 1rem 0;
+    // Keeps its last size while hidden above, so the page neither collapses nor loses its scroll
+    contain-intrinsic-size: auto none;
+    // A layer of its own, so the room's animations beneath do not push every spine into one
+    will-change: transform;
 
     @media (width >= 75rem) {
       --shelf-page-window-clear: calc(var(--room-window-left) + var(--room-window-width) + 3rem);
