@@ -20,6 +20,11 @@
         <div class="shelf-page-links">
           @if (shelf.hasValue() && shelf.value().books.length) {
             <button class="shelf-page-stats" type="button" (click)="stats.open()">
+              <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor">
+                <rect x="1" y="8" width="3.5" height="7" rx="1" />
+                <rect x="6.25" y="2" width="3.5" height="13" rx="1" />
+                <rect x="11.5" y="5" width="3.5" height="10" rx="1" />
+              </svg>
               Reading stats
             </button>
             <app-shelf-stats #stats [books]="shelf.value().books" />
