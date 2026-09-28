@@ -51,13 +51,21 @@ describe('GoodreadsService', () => {
       (req) =>
         req.url === `${environment.goodreadsUrl}/review/list_rss/42` &&
         req.params.get('shelf') === 'read' &&
+        req.params.get('per_page') === '50' &&
         req.params.get('page') === String(page),
     );
   }
 
+  // Answers the ten pages requested together, those past the given ones come back empty
+  function flushWave(first: number, ...items: string[]) {
+    for (let i = 0; i < 10; i++) {
+      expectPage(first + i).flush(feed("Otis 's bookshelf: read", items[i] ?? ''));
+    }
+  }
+
   it('parses the username and books', async () => {
     const result = goodreadsService.fetchReadShelf('42');
-    expectPage(1).flush(feed("Otis 's bookshelf: read", LONG_SHIPS));
+    flushWave(1, LONG_SHIPS);
     expect(await result).toEqual({
       username: 'Otis',
       books: [
@@ -81,14 +89,14 @@ describe('GoodreadsService', () => {
   it('keeps a downloaded shelf at hand synchronously', async () => {
     const result = goodreadsService.fetchReadShelf('42');
     expect(goodreadsService.loadedShelf('42')).toBeUndefined();
-    expectPage(1).flush(feed("Otis 's bookshelf: read", LONG_SHIPS));
+    flushWave(1, LONG_SHIPS);
     const shelf = await result;
     expect(goodreadsService.loadedShelf('42')).toBe(shelf);
   });
 
   it('falls back to the date added and zero pages', async () => {
     const result = goodreadsService.fetchReadShelf('42');
-    expectPage(1).flush(feed("Ann's bookshelf: read", NO_READ_DATE));
+    flushWave(1, NO_READ_DATE);
     const [book] = (await result).books;
     expect(book.read).toEqual(new Date('2025-03-01T12:00:00Z'));
     expect(book.published).toBeUndefined();
@@ -103,31 +111,49 @@ describe('GoodreadsService', () => {
       '<book_large_image_url>https://s.gr-assets.com/assets/nophoto/book/111x148.png</book_large_image_url><user_rating>',
     );
     const result = goodreadsService.fetchReadShelf('42');
-    expectPage(1).flush(feed("Ann's bookshelf: read", placeholder));
+    flushWave(1, placeholder);
     expect((await result).books[0].coverUrl).toBeUndefined();
   });
 
-  it('collects books across pages', async () => {
-    const result = goodreadsService.fetchReadShelf('42');
-    expectPage(1).flush(feed("Ann's bookshelf: read", LONG_SHIPS.repeat(200)));
+  it('collects books across waves of pages', async () => {
+    const progress: number[] = [];
+    const result = goodreadsService.fetchReadShelf('42', (books) => progress.push(books));
+    flushWave(1, ...Array<string>(10).fill(LONG_SHIPS.repeat(50)));
     await new Promise((resolve) => setTimeout(resolve));
-    expectPage(2).flush(feed("Ann's bookshelf: read", LONG_SHIPS.repeat(37)));
-    expect((await result).books).toHaveLength(237);
+    flushWave(11, LONG_SHIPS.repeat(37));
+    expect((await result).books).toHaveLength(537);
+    expect(progress.slice(0, 3)).toEqual([50, 100, 150]);
+    expect(progress.at(-1)).toBe(537);
+  });
+
+  it('keeps the page order when pages arrive out of order', async () => {
+    const result = goodreadsService.fetchReadShelf('42');
+    const book = (id: string) => LONG_SHIPS.replace('<book_id>10081041', `<book_id>${id}`);
+    expectPage(2).flush(feed("Otis 's bookshelf: read", book('second')));
+    expectPage(1).flush(feed("Otis 's bookshelf: read", book('first').repeat(50)));
+    for (let page = 3; page <= 10; page++) {
+      expectPage(page).flush(feed("Otis 's bookshelf: read", ''));
+    }
+    const ids = (await result).books.map((b) => b.id);
+    expect(ids.at(-2)).toBe('first');
+    expect(ids.at(-1)).toBe('second');
   });
 
   it('downloads a shelf only once', async () => {
     const first = goodreadsService.fetchReadShelf('42');
     const second = goodreadsService.fetchReadShelf('42');
-    expectPage(1).flush(feed("Ann's bookshelf: read", LONG_SHIPS));
+    flushWave(1, LONG_SHIPS);
     expect(await second).toBe(await first);
   });
 
   it('rejects when the user does not exist, and tries again next time', async () => {
     const result = goodreadsService.fetchReadShelf('42');
-    expectPage(1).flush('404 - invalid user_id', { status: 404, statusText: 'Not Found' });
+    for (const request of http.match(() => true)) {
+      request.flush('404 - invalid user_id', { status: 404, statusText: 'Not Found' });
+    }
     await expect(result).rejects.toMatchObject({ status: 404 });
 
     goodreadsService.fetchReadShelf('42');
-    expectPage(1);
+    expect(http.match(() => true)).toHaveLength(10);
   });
 });

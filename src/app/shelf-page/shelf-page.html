@@ -117,7 +117,14 @@
 
         <div class="shelf-page-status" aria-live="polite">
           @if (shelf.isLoading()) {
-            <p>Stacking your books…</p>
+            <p>
+              Stacking your books…
+              @if (loadingSlowly() && booksLoaded()) {
+                <span class="shelf-page-progress" aria-hidden="true">
+                  {{ booksLoaded() }} so far
+                </span>
+              }
+            </p>
           } @else if (errorMessage(); as message) {
             <p>{{ message }} <a routerLink="/">Try another ID</a></p>
           } @else if (shelf.hasValue() && shelf.value().books.length === 0) {

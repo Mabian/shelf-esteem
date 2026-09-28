@@ -29,8 +29,11 @@ export interface ReadShelf {
   books: Book[];
 }
 
-// Goodreads caps the RSS feed at 200 items per page, larger values fall back to 100.
-const PAGE_SIZE = 200;
+// A page takes Goodreads longer the more items it holds (about 8 s for 200), so the shelf comes
+// in small pages, many at once. The feed has no total count, so a wave of pages goes out at a
+// time until one comes back short.
+const PAGE_SIZE = 50;
+const PAGES_PER_WAVE = 10;
 
 @Service()
 export class GoodreadsService {
@@ -38,10 +41,11 @@ export class GoodreadsService {
   private readonly shelves = new Map<string, Promise<ReadShelf>>();
   private readonly loaded = new Map<string, ReadShelf>();
 
-  fetchReadShelf(userId: string): Promise<ReadShelf> {
+  /** `onProgress` hears the number of books downloaded so far, unless the shelf is already cached. */
+  fetchReadShelf(userId: string, onProgress?: (books: number) => void): Promise<ReadShelf> {
     let shelf = this.shelves.get(userId);
     if (!shelf) {
-      shelf = this.download(userId);
+      shelf = this.download(userId, onProgress);
       shelf.then(
         (loaded) => this.loaded.set(userId, loaded),
         () => this.shelves.delete(userId),
@@ -56,17 +60,30 @@ export class GoodreadsService {
     return this.loaded.get(userId);
   }
 
-  private async download(userId: string): Promise<ReadShelf> {
+  private async download(
+    userId: string,
+    onProgress?: (books: number) => void,
+  ): Promise<ReadShelf> {
     let username = '';
     const books: Book[] = [];
-    for (let page = 1; ; page++) {
-      const feed = await this.fetchPage(userId, page);
-      if (page === 1) {
-        username = parseUsername(feed);
+    let downloaded = 0;
+    for (let first = 1; ; first += PAGES_PER_WAVE) {
+      const wave = await Promise.all(
+        Array.from({ length: PAGES_PER_WAVE }, async (_, i) => {
+          const feed = await this.fetchPage(userId, first + i);
+          const items = [...feed.querySelectorAll('item')];
+          downloaded += items.length;
+          onProgress?.(downloaded);
+          return { feed, items };
+        }),
+      );
+      if (first === 1) {
+        username = parseUsername(wave[0].feed);
       }
-      const items = [...feed.querySelectorAll('item')];
-      books.push(...items.map(parseBook));
-      if (items.length < PAGE_SIZE) {
+      for (const { items } of wave) {
+        books.push(...items.map(parseBook));
+      }
+      if (wave.some(({ items }) => items.length < PAGE_SIZE)) {
         return { username, books };
       }
     }

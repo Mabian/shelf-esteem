@@ -62,9 +62,19 @@ export class ShelfPage {
   protected readonly room = signal('day');
   protected readonly newShelfPerYear = signal(false);
 
+  protected readonly booksLoaded = signal(0);
+  // The count only shows once loading takes a while, so quick loads do not flicker
+  protected readonly loadingSlowly = signal(false);
   protected readonly shelf = resource({
     params: () => this.userId(),
-    loader: ({ params }) => this.goodreadsService.fetchReadShelf(params),
+    loader: ({ params }) => {
+      this.booksLoaded.set(0);
+      this.loadingSlowly.set(false);
+      const timer = setTimeout(() => this.loadingSlowly.set(true), 1000);
+      return this.goodreadsService
+        .fetchReadShelf(params, (books) => this.booksLoaded.set(books))
+        .finally(() => clearTimeout(timer));
+    },
   });
   protected readonly yearGroups = computed(() =>
     this.shelf.hasValue() ? groupByYear(this.shelf.value().books) : [],

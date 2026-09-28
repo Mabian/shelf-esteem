@@ -291,6 +291,12 @@
       pointer-events: auto;
     }
 
+    .shelf-page-progress {
+      margin-inline-start: 0.35rem;
+      color: var(--color-ink-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
     a {
       color: var(--color-accent);
       font-weight: 700;
