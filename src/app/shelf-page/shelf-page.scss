@@ -81,6 +81,30 @@
     }
   }
 
+  .shelf-page-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+  }
+
+  .shelf-page-stats {
+    padding: 0.4rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-ink);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 0 2px var(--room-ink);
+
+    &:focus-visible {
+      outline: 3px solid var(--room-link);
+      outline-offset: 3px;
+    }
+  }
+
   .shelf-page-back {
     color: var(--room-link);
     font-weight: 700;

@@ -17,7 +17,15 @@
           }
         </h1>
 
-        <a class="shelf-page-back" routerLink="/">Look up another shelf</a>
+        <div class="shelf-page-links">
+          @if (shelf.hasValue() && shelf.value().books.length) {
+            <button class="shelf-page-stats" type="button" (click)="stats.open()">
+              Reading stats
+            </button>
+            <app-shelf-stats #stats [books]="shelf.value().books" />
+          }
+          <a class="shelf-page-back" routerLink="/">Look up another shelf</a>
+        </div>
 
         <div class="shelf-page-options">
           <fieldset class="shelf-page-picker">

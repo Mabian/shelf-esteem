@@ -1,0 +1,270 @@
+<dialog #dialog class="shelf-stats-dialog" aria-labelledby="shelf-stats-title" (click)="close()">
+  <div class="shelf-stats-panel" (click)="$event.stopPropagation()">
+    @let s = stats();
+    <h2 id="shelf-stats-title" class="shelf-stats-title">Reading stats</h2>
+
+    <section class="shelf-stats-section">
+      <h3>Overview</h3>
+      <dl class="shelf-stats-tiles">
+        <div><dt>Books read</dt><dd>{{ s.books | number }}</dd></div>
+        <div><dt>Pages read</dt><dd>{{ s.pages | number }}</dd></div>
+        <div><dt>Ø Books per year</dt><dd>{{ s.booksPerYear | number: '1.0-1' }}</dd></div>
+        <div><dt>Ø Pages per day</dt><dd>{{ s.pagesPerDay | number: '1.0-0' }}</dd></div>
+        <div class="shelf-stats-pace">
+          <dt>Books read this year</dt>
+          <dd>
+            {{ s.booksThisYear }}
+            <small>
+              on pace for {{ s.projectedThisYear }} by year end
+              <button
+                class="shelf-stats-hint-button"
+                type="button"
+                aria-label="About this estimate"
+                aria-describedby="shelf-stats-pace-hint"
+              >
+                i
+              </button>
+            </small>
+            <span id="shelf-stats-pace-hint" class="shelf-stats-hint" role="tooltip">
+              This is <b>not</b> your Goodreads Reading Challenge. It is the number of books you
+              will have read by the end of the year if you keep up your current pace.
+            </span>
+          </dd>
+        </div>
+        <div>
+          <dt>Ø Pages per day this year</dt>
+          <dd>{{ s.pagesPerDayThisYear | number: '1.0-0' }}</dd>
+        </div>
+        <div><dt>Height of all books stacked</dt><dd>{{ s.stackMeters | number: '1.1-1' }} m</dd></div>
+      </dl>
+    </section>
+
+    <section class="shelf-stats-section">
+      <h3>Authors</h3>
+      <dl class="shelf-stats-tiles">
+        <div><dt>Different authors read</dt><dd>{{ s.authors }}</dd></div>
+        <div><dt>Authors read only once</dt><dd>{{ s.oneOffAuthorShare | percent }}</dd></div>
+      </dl>
+      <h4>Most read</h4>
+      <ng-container *ngTemplateOutlet="bars; context: { $implicit: s.topAuthors }" />
+      @if (s.bestAuthor; as author) {
+        <dl class="shelf-stats-facts">
+          <div>
+            <dt>Best rated author</dt>
+            <dd>
+              {{ author.label }}: Ø {{ author.averageRating | number: '1.1-1' }} over
+              {{ author.count }} books
+            </dd>
+          </div>
+        </dl>
+      }
+    </section>
+
+    <section class="shelf-stats-section">
+      <h3>Over time</h3>
+      <h4>Books per year</h4>
+      <ng-container *ngTemplateOutlet="bars; context: { $implicit: yearRows() }" />
+      <h4>Books per month of the year</h4>
+      <ng-container *ngTemplateOutlet="bars; context: { $implicit: s.months }" />
+      <dl class="shelf-stats-facts">
+        @if (s.recordYear; as year) {
+          <div>
+            <dt>Record year</dt>
+            <dd>{{ year.year }}: {{ year.books }} books, {{ year.pages | number }} pages</dd>
+          </div>
+        }
+        @if (s.busiestMonth; as month) {
+          <div><dt>Busiest month</dt><dd>{{ month.label }} ({{ month.count }} books)</dd></div>
+        }
+        @if (s.longestGap; as gap) {
+          <div>
+            <dt>Longest break</dt>
+            <dd>
+              {{ gap.days }} days, between <cite>{{ gap.before.title }}</cite> and
+              <cite>{{ gap.after.title }}</cite>
+            </dd>
+          </div>
+        }
+        @if (s.longestStreak; as streak) {
+          <div>
+            <dt>Longest streak</dt>
+            <dd>
+              {{ streak.months }} months in a row with a book ({{ streak.start | date: 'MMM y' }}
+              to {{ streak.end | date: 'MMM y' }})
+            </dd>
+          </div>
+        }
+        <div>
+          <dt>Ø Your rating per year</dt>
+          <dd>
+            @for (year of s.years; track year.year) {
+              @if (year.averageRating !== undefined) {
+                <span class="shelf-stats-inline">
+                  {{ year.year }}: {{ year.averageRating | number: '1.1-1' }}
+                </span>
+              }
+            }
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="shelf-stats-section">
+      <h3>Length</h3>
+      <dl class="shelf-stats-tiles">
+        <div><dt>Ø Pages per book</dt><dd>{{ s.averagePages ?? 0 | number: '1.0-0' }} p.</dd></div>
+        <div><dt>Median pages per book</dt><dd>{{ s.medianPages ?? 0 | number: '1.0-0' }} p.</dd></div>
+      </dl>
+      <h4>Books by page count</h4>
+      <ng-container *ngTemplateOutlet="bars; context: { $implicit: s.lengths }" />
+      <dl class="shelf-stats-facts">
+        @if (s.longest; as book) {
+          <div>
+            <dt>Longest</dt>
+            <dd><ng-container *ngTemplateOutlet="bookRef; context: { $implicit: book }" /></dd>
+          </div>
+        }
+        @if (s.shortest; as book) {
+          <div>
+            <dt>Shortest</dt>
+            <dd><ng-container *ngTemplateOutlet="bookRef; context: { $implicit: book }" /></dd>
+          </div>
+        }
+        <div>
+          <dt>Ø Your rating by length</dt>
+          <dd>
+            @for (length of s.lengths; track length.label) {
+              @if (length.averageRating !== undefined) {
+                <span class="shelf-stats-inline">
+                  {{ length.label }}: {{ length.averageRating | number: '1.1-1' }}
+                </span>
+              }
+            }
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="shelf-stats-section">
+      <h3>Ratings</h3>
+      <dl class="shelf-stats-tiles">
+        <div><dt>Ø Your rating</dt><dd>{{ s.averageRating ?? 0 | number: '1.2-2' }}</dd></div>
+        <div><dt>Books you did not rate</dt><dd>{{ s.unrated }}</dd></div>
+        @if (s.ratingVsCrowd !== undefined) {
+          <div>
+            <dt>Ø Difference from Goodreads</dt>
+            <dd>
+              {{ s.ratingVsCrowd > 0 ? '+' : '' }}{{ s.ratingVsCrowd | number: '1.2-2' }}
+              <small>{{ s.ratingVsCrowd > 0 ? 'more generous' : 'stricter' }}</small>
+            </dd>
+          </div>
+        }
+      </dl>
+      <h4>Your stars</h4>
+      <ng-container *ngTemplateOutlet="bars; context: { $implicit: s.ratings }" />
+      <dl class="shelf-stats-facts">
+        @if (s.lovedMoreThanCrowd; as book) {
+          <div>
+            <dt>You liked it more than most</dt>
+            <dd>
+              <ng-container *ngTemplateOutlet="bookRef; context: { $implicit: book }" />:
+              you {{ book.rating }}, Goodreads Ø {{ book.averageRating }}
+            </dd>
+          </div>
+        }
+        @if (s.lovedLessThanCrowd; as book) {
+          <div>
+            <dt>You liked it less than most</dt>
+            <dd>
+              <ng-container *ngTemplateOutlet="bookRef; context: { $implicit: book }" />:
+              you {{ book.rating }}, Goodreads Ø {{ book.averageRating }}
+            </dd>
+          </div>
+        }
+        @if (s.crowdFavorite; as book) {
+          <div>
+            <dt>Highest rated book on Goodreads you read</dt>
+            <dd>
+              <ng-container *ngTemplateOutlet="bookRef; context: { $implicit: book }" />
+              (Ø {{ book.averageRating }})
+            </dd>
+          </div>
+        }
+        @if (s.crowdLeastFavorite; as book) {
+          <div>
+            <dt>Lowest rated book on Goodreads you read</dt>
+            <dd>
+              <ng-container *ngTemplateOutlet="bookRef; context: { $implicit: book }" />
+              (Ø {{ book.averageRating }})
+            </dd>
+          </div>
+        }
+      </dl>
+    </section>
+
+    <section class="shelf-stats-section">
+      <h3>Publication</h3>
+      <dl class="shelf-stats-tiles">
+        <div><dt>Books older than 50 years</dt><dd>{{ s.classicShare | percent }}</dd></div>
+        @if (s.yearsAfterPublication !== undefined) {
+          <div>
+            <dt>Ø Years from publication to reading</dt>
+            <dd>{{ s.yearsAfterPublication | number: '1.0-0' }}</dd>
+          </div>
+        }
+      </dl>
+      <h4>Books by decade published</h4>
+      <ng-container *ngTemplateOutlet="bars; context: { $implicit: s.decades }" />
+      @if (s.oldest; as book) {
+        <dl class="shelf-stats-facts">
+          <div>
+            <dt>Oldest</dt>
+            <dd>
+              <ng-container *ngTemplateOutlet="bookRef; context: { $implicit: book }" />
+              ({{ book.published }})
+            </dd>
+          </div>
+        </dl>
+      }
+    </section>
+
+    <section class="shelf-stats-section">
+      <h3>Your shelves</h3>
+      <p class="shelf-stats-note">{{ s.taggedBooks }} of {{ s.books }} books carry a shelf tag.</p>
+      <ng-container *ngTemplateOutlet="bars; context: { $implicit: s.topShelves }" />
+    </section>
+
+    @if (colorBand().length) {
+      <section class="shelf-stats-section">
+        <h3>Cover colors</h3>
+        <div class="shelf-stats-band" aria-hidden="true">
+          @for (color of colorBand(); track $index) {
+            <span [style.background]="color"></span>
+          }
+        </div>
+      </section>
+    }
+
+    <button class="shelf-stats-close" type="button" (click)="close()">Close</button>
+  </div>
+</dialog>
+
+<ng-template #bars let-rows>
+  @if (rows.length) {
+    <ul class="shelf-stats-bars">
+      @for (row of rows; track row.label) {
+        <li>
+          <span class="shelf-stats-bar-label">{{ row.label }}</span>
+          <span class="shelf-stats-bar" [style.width]="barWidth(row.count, rows)"></span>
+          <span class="shelf-stats-bar-count">{{ row.count }}</span>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="shelf-stats-note">No data.</p>
+  }
+</ng-template>
+
+<ng-template #bookRef let-book>
+  <cite>{{ book.title }}</cite> by {{ book.author }}@if (book.pages) {, {{ book.pages }} p.}
+</ng-template>

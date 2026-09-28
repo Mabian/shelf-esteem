@@ -13,6 +13,12 @@ export interface Book {
   rating: number;
   /** When the user read the book, or added it to the shelf if no read date was entered. */
   read: Date;
+  /** The Goodreads community average, 0 when nobody rated it */
+  averageRating: number;
+  /** Year of first publication, undefined when Goodreads does not know it. */
+  published?: number;
+  /** The user's own shelf tags besides "read" */
+  shelves: string[];
   /** Missing when Goodreads only has its gray placeholder. */
   coverUrl?: string;
   thumbnailUrl?: string;
@@ -92,6 +98,12 @@ function parseBook(item: Element): Book {
     pages: Number(text('num_pages')) || 0,
     rating: Number(text('user_rating')) || 0,
     read: new Date(text('user_read_at') || text('user_date_added')),
+    averageRating: Number(text('average_rating')) || 0,
+    published: Number(text('book_published')) || undefined,
+    shelves: text('user_shelves')
+      .split(',')
+      .map((shelf) => shelf.trim())
+      .filter((shelf) => shelf !== ''),
     coverUrl: cover(text('book_large_image_url')),
     thumbnailUrl: cover(text('book_small_image_url')),
   };

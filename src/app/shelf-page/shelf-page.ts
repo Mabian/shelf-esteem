@@ -16,11 +16,12 @@ import { Footer } from '../footer/footer';
 import { GoodreadsService } from '../goodreads.service';
 import { RoomScene } from '../room-scene/room-scene';
 import { ShelfBook } from '../shelf-book/shelf-book';
+import { ShelfStats } from '../shelf-stats/shelf-stats';
 import { groupByYear } from './year-groups';
 
 @Component({
   selector: 'app-shelf-page',
-  imports: [RouterLink, RouterOutlet, ShelfBook, Footer, RoomScene],
+  imports: [RouterLink, RouterOutlet, ShelfBook, ShelfStats, Footer, RoomScene],
   templateUrl: './shelf-page.html',
   styleUrl: './shelf-page.scss',
 })

@@ -1,0 +1,228 @@
+.shelf-stats-dialog {
+  width: min(48rem, calc(100vw - 2rem));
+  max-width: none;
+  padding: 0.75rem;
+  overflow: hidden;
+  border: 0;
+  border-radius: 1.75rem;
+  background: var(--color-card);
+  color: var(--color-ink);
+  box-shadow: 0 20px 50px -20px rgb(60 50 150 / 35%);
+
+  &::backdrop {
+    background: rgb(38 33 74 / 55%);
+  }
+
+  .shelf-stats-panel {
+    max-height: calc(100dvh - 5.5rem);
+    padding: 1rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .shelf-stats-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  .shelf-stats-section {
+    margin-block-start: 1.75rem;
+
+    h3 {
+      margin: 0 0 0.75rem;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    h4 {
+      margin: 1rem 0 0.4rem;
+      color: var(--color-ink-muted);
+      font-size: 0.85rem;
+    }
+  }
+
+  .shelf-stats-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 0.5rem;
+    margin: 0;
+
+    div {
+      padding: 0.6rem 0.8rem;
+      border-radius: 0.9rem;
+      background: var(--color-shelf);
+    }
+
+    dt {
+      color: var(--color-ink-muted);
+      font-size: 0.78rem;
+    }
+
+    dd {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 600;
+
+      small {
+        display: block;
+        color: var(--color-ink-muted);
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 400;
+      }
+    }
+  }
+
+  // The tile anchors the hint, which shows while its button is hovered or focused
+  .shelf-stats-pace {
+    position: relative;
+
+    .shelf-stats-hint-button {
+      display: inline-grid;
+      place-items: center;
+      width: 1.1rem;
+      height: 1.1rem;
+      margin-inline-start: 0.2rem;
+      vertical-align: middle;
+      // The italic i leans right, so its box sits a little left of center to look centered
+      padding: 0 0.15em 0 0;
+      border: 1.5px solid currentcolor;
+      border-radius: 50%;
+      background: transparent;
+      color: inherit;
+      font: italic 700 0.7rem/1 var(--font-body);
+      cursor: help;
+
+      &:focus-visible {
+        outline: 3px solid var(--color-accent);
+        outline-offset: 2px;
+      }
+    }
+
+    .shelf-stats-hint {
+      position: absolute;
+      inset: calc(100% + 0.4rem) 0 auto;
+      z-index: 1;
+      display: none;
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.75rem;
+      background: var(--color-ink);
+      color: var(--color-card);
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 400;
+      line-height: 1.4;
+      box-shadow: 0 8px 24px -8px rgb(0 0 0 / 40%);
+    }
+
+    &:has(
+        .shelf-stats-hint-button:hover,
+        .shelf-stats-hint-button:focus-visible,
+        .shelf-stats-hint:hover
+      )
+      .shelf-stats-hint {
+      display: block;
+    }
+  }
+
+  .shelf-stats-facts {
+    margin: 0.75rem 0 0;
+    font-size: 0.9rem;
+
+    div {
+      margin-block-end: 0.5rem;
+    }
+
+    dt {
+      font-weight: 700;
+    }
+
+    dd {
+      margin: 0;
+      color: var(--color-ink-muted);
+    }
+  }
+
+  .shelf-stats-inline {
+    margin-inline-end: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .shelf-stats-bars {
+    display: grid;
+    grid-template-columns: minmax(3rem, max-content) 1fr 2.5rem;
+    align-items: center;
+    gap: 2px 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.8rem;
+
+    li {
+      display: contents;
+    }
+
+    .shelf-stats-bar-label {
+      max-width: 12rem;
+      overflow: hidden;
+      color: var(--color-ink-muted);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .shelf-stats-bar {
+      min-width: 2px;
+      height: 0.9rem;
+      border-radius: 0 4px 4px 0;
+      background: var(--color-accent);
+    }
+
+    .shelf-stats-bar-count {
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  .shelf-stats-note {
+    margin: 0 0 0.5rem;
+    color: var(--color-ink-muted);
+    font-size: 0.85rem;
+  }
+
+  .shelf-stats-band {
+    display: flex;
+    height: 2.5rem;
+    overflow: hidden;
+    border-radius: 0.6rem;
+
+    span {
+      flex: 1;
+    }
+  }
+
+  .shelf-stats-close {
+    margin-block-start: 1.75rem;
+    padding: 0.5rem 1.25rem;
+    border: 2px solid var(--color-border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-ink-muted);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-ink);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--color-accent);
+      outline-offset: 3px;
+    }
+  }
+}

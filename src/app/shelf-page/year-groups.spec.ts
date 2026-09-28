@@ -2,7 +2,16 @@ import { Book } from '../goodreads.service';
 import { groupByYear } from './year-groups';
 
 function book(id: string, read: string): Book {
-  return { id, title: id, author: '', pages: 0, rating: 0, read: new Date(read), coverUrl: '', thumbnailUrl: '' };
+  return {
+    id,
+    title: id,
+    author: '',
+    pages: 0,
+    rating: 0,
+    read: new Date(read),
+    averageRating: 0,
+    shelves: [],
+  };
 }
 
 describe('groupByYear', () => {

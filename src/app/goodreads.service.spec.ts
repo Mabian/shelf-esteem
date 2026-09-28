@@ -13,6 +13,9 @@ const LONG_SHIPS = `<item>
   <user_rating>5</user_rating>
   <user_read_at><![CDATA[Tue, 18 Aug 2026 00:00:00 -0700]]></user_read_at>
   <user_date_added><![CDATA[Fri, 11 Sep 2026 10:07:58 -0700]]></user_date_added>
+  <user_shelves><![CDATA[adventure, norway]]></user_shelves>
+  <average_rating>4.38</average_rating>
+  <book_published>1941</book_published>
   <book id="10081041"><num_pages>528</num_pages></book>
 </item>`;
 
@@ -65,6 +68,9 @@ describe('GoodreadsService', () => {
           pages: 528,
           rating: 5,
           read: new Date('2026-08-18T07:00:00Z'),
+          averageRating: 4.38,
+          published: 1941,
+          shelves: ['adventure', 'norway'],
           coverUrl: 'https://example.com/large.jpg',
           thumbnailUrl: 'https://example.com/small.jpg',
         },
@@ -85,6 +91,8 @@ describe('GoodreadsService', () => {
     expectPage(1).flush(feed("Ann's bookshelf: read", NO_READ_DATE));
     const [book] = (await result).books;
     expect(book.read).toEqual(new Date('2025-03-01T12:00:00Z'));
+    expect(book.published).toBeUndefined();
+    expect(book.shelves).toEqual([]);
     expect(book.pages).toBe(0);
     expect(book.rating).toBe(0);
   });
