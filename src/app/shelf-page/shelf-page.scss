@@ -103,7 +103,14 @@
     gap: 0.5rem 1.25rem;
   }
 
-  .shelf-page-stats {
+  .shelf-page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .shelf-page-stats,
+  .shelf-page-share {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;

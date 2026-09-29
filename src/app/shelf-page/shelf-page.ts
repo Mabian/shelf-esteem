@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   afterNextRender,
@@ -11,7 +12,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationStart, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router, RouterLink, RouterOutlet } from '@angular/router';
 import type { BookView } from '../book-view/book-view';
 import { Footer } from '../footer/footer';
 import { CoverColorService, Rgb } from '../cover-color.service';
@@ -32,6 +33,9 @@ export class ShelfPage {
   private readonly coverColorService = inject(CoverColorService);
   private readonly injector = inject(Injector);
   private readonly router = inject(Router);
+  private readonly location = inject(Location);
+  // Read once: opening a book drops the query parameters, which must not reset the style
+  private readonly styleParams = inject(ActivatedRoute).snapshot.queryParamMap;
 
   readonly userId = input.required<string>();
 
@@ -41,7 +45,7 @@ export class ShelfPage {
     { value: 'lavender', label: 'Lavender', swatch: '#cfc6f7' },
     { value: 'white', label: 'White', swatch: '#fbfbfd' },
   ];
-  protected readonly bookcase = signal('walnut');
+  protected readonly bookcase = signal(this.fromParams('bookcase', this.bookcases));
   protected readonly rooms = [
     {
       value: 'day',
@@ -62,14 +66,15 @@ export class ShelfPage {
       swatch: 'linear-gradient(#6fcbee 42%, #1f8fc2 42% 68%, #f1d7a0 68%)',
     },
   ];
-  protected readonly room = signal('day');
+  protected readonly room = signal(this.fromParams('room', this.rooms));
   protected readonly sorts = [
     { value: 'year', label: 'By year' },
     { value: 'author', label: 'By author' },
     { value: 'color', label: 'By color' },
   ];
-  protected readonly sort = signal('year');
-  protected readonly newShelfPerYear = signal(false);
+  protected readonly sort = signal(this.fromParams('sort', this.sorts));
+  protected readonly newShelfPerYear = signal(this.styleParams.get('years') === 'new-shelf');
+  protected readonly shareStatus = signal<string | undefined>(undefined);
 
   protected readonly booksLoaded = signal(0);
   // The count only shows once loading takes a while, so quick loads do not flicker
@@ -168,6 +173,32 @@ export class ShelfPage {
       window.removeEventListener('scroll', onScroll);
       clearTimeout(timer);
     });
+  }
+
+  protected async share(): Promise<void> {
+    const tree = this.router.createUrlTree(['/shelf', this.userId()], {
+      queryParams: {
+        bookcase: this.bookcase(),
+        room: this.room(),
+        sort: this.sort(),
+        // Undefined leaves the parameter out, it only matters when sorted by year
+        years: this.sort() === 'year' ? (this.newShelfPerYear() ? 'new-shelf' : 'flow') : undefined,
+      },
+    });
+    const path = this.location.prepareExternalUrl(this.router.serializeUrl(tree));
+    try {
+      await navigator.clipboard.writeText(new URL(path, window.location.origin).href);
+      this.shareStatus.set('Link copied');
+    } catch {
+      this.shareStatus.set('Could not copy the link');
+    }
+    setTimeout(() => this.shareStatus.set(undefined), 2500);
+  }
+
+  // The first option is the default, for a missing or unknown value
+  private fromParams(name: string, options: { value: string }[]): string {
+    const value = this.styleParams.get(name);
+    return options.some((option) => option.value === value) ? value! : options[0].value;
   }
 
   protected onBookOpened(view: BookView): void {
