@@ -140,4 +140,8 @@
   <div class="shelf-page-floor">
     <app-footer [inert]="bookOpen()" />
   </div>
+
+  @if (scrolling()) {
+    <div class="shelf-page-scroll-shield"></div>
+  }
 </div>

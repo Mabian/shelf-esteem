@@ -23,6 +23,12 @@
     }
   }
 
+  // Takes the pointer off the books while scrolling
+  .shelf-page-scroll-shield {
+    position: fixed;
+    inset: 0;
+  }
+
   .shelf-page-floor {
     display: flex;
     flex: 1;

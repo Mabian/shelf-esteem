@@ -3,6 +3,7 @@ import {
   afterNextRender,
   Component,
   computed,
+  DestroyRef,
   inject,
   Injector,
   input,
@@ -100,12 +101,29 @@ export class ShelfPage {
   // the view transition captures its old state instead of in the middle of the morph
   protected readonly shelfCovered = signal(false);
   protected readonly selectedId = signal<string | undefined>(undefined);
+  // While true, a shield covers the page so books gliding under the pointer do not tip out one
+  // after another, which made scrolling stutter
+  protected readonly scrolling = signal(false);
 
   constructor() {
     this.router.events.pipe(takeUntilDestroyed()).subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.shelfCovered.set(false);
       }
+    });
+
+    // A plain listener instead of a host binding, so scroll events do not each run change
+    // detection over every book, the signal only changes when scrolling starts and stops
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const onScroll = () => {
+      this.scrolling.set(true);
+      clearTimeout(timer);
+      timer = setTimeout(() => this.scrolling.set(false), 150);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    inject(DestroyRef).onDestroy(() => {
+      window.removeEventListener('scroll', onScroll);
+      clearTimeout(timer);
     });
   }
 
