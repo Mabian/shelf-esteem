@@ -17,6 +17,12 @@
       animation: none !important;
     }
   }
+
+  // A running animation makes the GPU recomposite the whole page every frame, on top of the
+  // scrolling it already has to do
+  &.room-scene-paused * {
+    animation-play-state: paused;
+  }
 }
 
 .room-scene-window {

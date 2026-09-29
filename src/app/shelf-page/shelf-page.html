@@ -4,7 +4,7 @@
   [attr.data-bookcase]="bookcase()"
   [attr.data-room]="room()"
 >
-  <app-room-scene [room]="room()" />
+  <app-room-scene [room]="room()" [paused]="scrolling()" />
   <main class="shelf-page-main">
     <div class="shelf-page-content">
       <header class="shelf-page-header">

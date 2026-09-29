@@ -13,10 +13,14 @@ const FLAKES = Array.from({ length: 28 }, (_, i) => ({
   selector: 'app-room-scene',
   templateUrl: './room-scene.html',
   styleUrl: './room-scene.scss',
-  host: { 'aria-hidden': 'true' },
+  host: {
+    'aria-hidden': 'true',
+    '[class.room-scene-paused]': 'paused()',
+  },
 })
 export class RoomScene {
   readonly room = input.required<string>();
+  readonly paused = input(false);
 
   protected readonly flakes = FLAKES;
 }

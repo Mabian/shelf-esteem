@@ -102,7 +102,7 @@ export class ShelfPage {
   protected readonly shelfCovered = signal(false);
   protected readonly selectedId = signal<string | undefined>(undefined);
   // While true, a shield covers the page so books gliding under the pointer do not tip out one
-  // after another, which made scrolling stutter
+  // after another, which made scrolling stutter, and the room's animations hold still
   protected readonly scrolling = signal(false);
 
   constructor() {
