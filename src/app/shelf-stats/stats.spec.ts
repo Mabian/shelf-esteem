@@ -11,6 +11,7 @@ function book(id: string, read: string, extra: Partial<Book> = {}): Book {
     read: new Date(read),
     averageRating: 0,
     shelves: [],
+    description: [],
     ...extra,
   };
 }

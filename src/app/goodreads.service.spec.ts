@@ -14,6 +14,7 @@ const LONG_SHIPS = `<item>
   <user_read_at><![CDATA[Tue, 18 Aug 2026 00:00:00 -0700]]></user_read_at>
   <user_date_added><![CDATA[Fri, 11 Sep 2026 10:07:58 -0700]]></user_date_added>
   <user_shelves><![CDATA[adventure, norway]]></user_shelves>
+  <book_description><![CDATA[Viking <i>adventure</i> &amp; plunder.<br /><br />Orm sails south.<br/>]]></book_description>
   <average_rating>4.38</average_rating>
   <book_published>1941</book_published>
   <book id="10081041"><num_pages>528</num_pages></book>
@@ -79,6 +80,7 @@ describe('GoodreadsService', () => {
           averageRating: 4.38,
           published: 1941,
           shelves: ['adventure', 'norway'],
+          description: ['Viking adventure & plunder.', 'Orm sails south.'],
           coverUrl: 'https://example.com/large.jpg',
           thumbnailUrl: 'https://example.com/small.jpg',
         },
@@ -101,6 +103,7 @@ describe('GoodreadsService', () => {
     expect(book.read).toEqual(new Date('2025-03-01T12:00:00Z'));
     expect(book.published).toBeUndefined();
     expect(book.shelves).toEqual([]);
+    expect(book.description).toEqual([]);
     expect(book.pages).toBe(0);
     expect(book.rating).toBe(0);
   });

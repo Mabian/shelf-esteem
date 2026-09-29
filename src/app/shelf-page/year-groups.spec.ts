@@ -11,6 +11,7 @@ function book(id: string, read: string): Book {
     read: new Date(read),
     averageRating: 0,
     shelves: [],
+    description: [],
   };
 }
 

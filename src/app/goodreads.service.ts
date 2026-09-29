@@ -19,6 +19,8 @@ export interface Book {
   published?: number;
   /** The user's own shelf tags besides "read" */
   shelves: string[];
+  /** The blurb as plain text paragraphs, empty when Goodreads has none. Sometimes cut off with "…". */
+  description: string[];
   /** Missing when Goodreads only has its gray placeholder. */
   coverUrl?: string;
   thumbnailUrl?: string;
@@ -121,9 +123,22 @@ function parseBook(item: Element): Book {
       .split(',')
       .map((shelf) => shelf.trim())
       .filter((shelf) => shelf !== ''),
+    description: paragraphs(text('book_description')),
     coverUrl: cover(text('book_large_image_url')),
     thumbnailUrl: cover(text('book_small_image_url')),
   };
+}
+
+function paragraphs(html: string): string[] {
+  if (!html) {
+    return [];
+  }
+  const breaks = html.replace(/<br\s*\/?>|<\/p>/gi, '\n');
+  const text = new DOMParser().parseFromString(breaks, 'text/html').body.textContent ?? '';
+  return text
+    .split('\n')
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph !== '');
 }
 
 // Books without a cover point at a placeholder, which (unlike real covers) blocks cross-origin reads

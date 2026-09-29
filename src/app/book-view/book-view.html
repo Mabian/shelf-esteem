@@ -32,7 +32,17 @@
             <span>Not rated</span>
           }
           <span>Read {{ book.read | date: 'MMMM y' }}</span>
+          @if (book.pages) {
+            <span>{{ book.pages }} pages</span>
+          }
         </p>
+        @if (book.description.length) {
+          <div class="book-view-description" tabindex="0" role="region" aria-label="Blurb">
+            @for (paragraph of book.description; track $index) {
+              <p>{{ paragraph }}</p>
+            }
+          </div>
+        }
       </div>
     </div>
   }
