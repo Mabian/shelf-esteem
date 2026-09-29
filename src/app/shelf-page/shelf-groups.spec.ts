@@ -1,5 +1,5 @@
 import { Book } from '../goodreads.service';
-import { groupByAuthor, groupByYear } from './shelf-groups';
+import { groupByAuthor, groupByColor, groupByYear } from './shelf-groups';
 
 function book(id: string, read: string, author = ''): Book {
   return {
@@ -61,5 +61,28 @@ describe('groupByAuthor', () => {
       ['J', ['ulysses']],
       ['O', ['silence', '1984']],
     ]);
+  });
+});
+
+describe('groupByColor', () => {
+  it('runs through the hues, then grays from light to dark, then books without a color', () => {
+    const books = ['blue', 'none', 'black', 'red', 'white', 'green'].map((id) =>
+      book(id, '2024-01-01'),
+    );
+    const colors = new Map<string, [number, number, number]>([
+      ['blue', [30, 60, 200]],
+      ['black', [20, 20, 25]],
+      ['red', [200, 30, 30]],
+      ['white', [240, 238, 235]],
+      ['green', [40, 160, 60]],
+    ]);
+    const groups = groupByColor(books, colors);
+    expect(groups.map((group) => [group.label, group.books.map((b) => b.id)])).toEqual([
+      ['', ['red', 'green', 'blue', 'white', 'black', 'none']],
+    ]);
+  });
+
+  it('returns no groups for an empty shelf', () => {
+    expect(groupByColor([], new Map())).toEqual([]);
   });
 });

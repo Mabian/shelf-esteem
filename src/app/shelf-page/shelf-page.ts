@@ -14,11 +14,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationStart, Router, RouterLink, RouterOutlet } from '@angular/router';
 import type { BookView } from '../book-view/book-view';
 import { Footer } from '../footer/footer';
+import { CoverColorService, Rgb } from '../cover-color.service';
 import { GoodreadsService } from '../goodreads.service';
 import { RoomScene } from '../room-scene/room-scene';
 import { ShelfBook } from '../shelf-book/shelf-book';
 import { ShelfStats } from '../shelf-stats/shelf-stats';
-import { groupByAuthor, groupByYear } from './shelf-groups';
+import { groupByAuthor, groupByColor, groupByYear } from './shelf-groups';
 
 @Component({
   selector: 'app-shelf-page',
@@ -28,6 +29,7 @@ import { groupByAuthor, groupByYear } from './shelf-groups';
 })
 export class ShelfPage {
   private readonly goodreadsService = inject(GoodreadsService);
+  private readonly coverColorService = inject(CoverColorService);
   private readonly injector = inject(Injector);
   private readonly router = inject(Router);
 
@@ -64,6 +66,7 @@ export class ShelfPage {
   protected readonly sorts = [
     { value: 'year', label: 'By year' },
     { value: 'author', label: 'By author' },
+    { value: 'color', label: 'By color' },
   ];
   protected readonly sort = signal('year');
   protected readonly newShelfPerYear = signal(false);
@@ -82,6 +85,27 @@ export class ShelfPage {
         .finally(() => clearTimeout(timer));
     },
   });
+  // The spines request the same colors, so these mostly come from the cache. Loaded with the
+  // shelf, not on switching to color, so the switch is instant.
+  private readonly spineColors = resource({
+    params: () => (this.shelf.hasValue() ? this.shelf.value().books : undefined),
+    loader: async ({ params }) => {
+      const colors = new Map<string, Rgb>();
+      await Promise.all(
+        params.map(async (book) => {
+          if (book.thumbnailUrl) {
+            const color = await this.coverColorService
+              .colorOf(book.thumbnailUrl)
+              .catch(() => undefined);
+            if (color) {
+              colors.set(book.id, color);
+            }
+          }
+        }),
+      );
+      return colors;
+    },
+  });
   protected readonly groups = computed(() => {
     if (!this.shelf.hasValue()) {
       return [];
@@ -90,6 +114,12 @@ export class ShelfPage {
     switch (this.sort()) {
       case 'author':
         return groupByAuthor(books);
+      // Until every spine's color is read, the shelf keeps its years instead of reshuffling
+      // with each color that arrives
+      case 'color':
+        if (this.spineColors.hasValue()) {
+          return groupByColor(books, this.spineColors.value());
+        }
     }
     return groupByYear(books);
   });

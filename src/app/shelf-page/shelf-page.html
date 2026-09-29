@@ -115,13 +115,15 @@
             @if (newShelfPerYear() && sort() === 'year' && !$first) {
               <li class="shelf-page-break" aria-hidden="true"></li>
             }
-            <li class="shelf-page-divider">
-              <span class="shelf-page-divider-card">
-                <strong>{{ group.label }}</strong>
-                <small aria-hidden="true">{{ group.books.length }}</small>
-                <span class="sr-only">, {{ group.books.length }} books</span>
-              </span>
-            </li>
+            @if (group.label) {
+              <li class="shelf-page-divider">
+                <span class="shelf-page-divider-card">
+                  <strong>{{ group.label }}</strong>
+                  <small aria-hidden="true">{{ group.books.length }}</small>
+                  <span class="sr-only">, {{ group.books.length }} books</span>
+                </span>
+              </li>
+            }
             @for (book of group.books; track book.id) {
               <li
                 app-shelf-book
