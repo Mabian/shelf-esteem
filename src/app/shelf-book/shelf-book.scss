@@ -106,14 +106,12 @@
     box-shadow 0.35s,
     filter 0.35s;
 
-  // Paper grain. Its specks are black, so plain alpha darkens exactly like multiply would, without
-  // a blend for the GPU on every spine
+  // Paper grain
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     background: var(--texture-paper);
-    opacity: 0.32;
     pointer-events: none;
   }
 
