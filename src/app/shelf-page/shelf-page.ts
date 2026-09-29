@@ -18,7 +18,7 @@ import { GoodreadsService } from '../goodreads.service';
 import { RoomScene } from '../room-scene/room-scene';
 import { ShelfBook } from '../shelf-book/shelf-book';
 import { ShelfStats } from '../shelf-stats/shelf-stats';
-import { groupByYear } from './year-groups';
+import { groupByAuthor, groupByYear } from './shelf-groups';
 
 @Component({
   selector: 'app-shelf-page',
@@ -61,6 +61,11 @@ export class ShelfPage {
     },
   ];
   protected readonly room = signal('day');
+  protected readonly sorts = [
+    { value: 'year', label: 'By year' },
+    { value: 'author', label: 'By author' },
+  ];
+  protected readonly sort = signal('year');
   protected readonly newShelfPerYear = signal(false);
 
   protected readonly booksLoaded = signal(0);
@@ -77,9 +82,17 @@ export class ShelfPage {
         .finally(() => clearTimeout(timer));
     },
   });
-  protected readonly yearGroups = computed(() =>
-    this.shelf.hasValue() ? groupByYear(this.shelf.value().books) : [],
-  );
+  protected readonly groups = computed(() => {
+    if (!this.shelf.hasValue()) {
+      return [];
+    }
+    const books = this.shelf.value().books;
+    switch (this.sort()) {
+      case 'author':
+        return groupByAuthor(books);
+    }
+    return groupByYear(books);
+  });
   protected readonly errorMessage = computed(() => {
     const error = this.shelf.error();
     if (!error) {

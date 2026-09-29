@@ -68,38 +68,56 @@
           </fieldset>
 
           <fieldset class="shelf-page-picker">
-            <legend>Years</legend>
-            <label class="shelf-page-choice">
-              <input
-                type="radio"
-                name="years"
-                [checked]="!newShelfPerYear()"
-                (change)="newShelfPerYear.set(false)"
-              />
-              Flow on
-            </label>
-            <label class="shelf-page-choice">
-              <input
-                type="radio"
-                name="years"
-                [checked]="newShelfPerYear()"
-                (change)="newShelfPerYear.set(true)"
-              />
-              New shelf per year
-            </label>
+            <legend>Sort</legend>
+            @for (option of sorts; track option.value) {
+              <label class="shelf-page-choice">
+                <input
+                  type="radio"
+                  name="sort"
+                  [value]="option.value"
+                  [checked]="sort() === option.value"
+                  (change)="sort.set(option.value)"
+                />
+                {{ option.label }}
+              </label>
+            }
           </fieldset>
+
+          @if (sort() === 'year') {
+            <fieldset class="shelf-page-picker">
+              <legend>Years</legend>
+              <label class="shelf-page-choice">
+                <input
+                  type="radio"
+                  name="years"
+                  [checked]="!newShelfPerYear()"
+                  (change)="newShelfPerYear.set(false)"
+                />
+                Flow on
+              </label>
+              <label class="shelf-page-choice">
+                <input
+                  type="radio"
+                  name="years"
+                  [checked]="newShelfPerYear()"
+                  (change)="newShelfPerYear.set(true)"
+                />
+                New shelf per year
+              </label>
+            </fieldset>
+          }
         </div>
       </header>
 
       <div class="shelf-page-case">
         <ul class="shelf-page-rows" [attr.aria-busy]="shelf.isLoading()">
-          @for (group of yearGroups(); track group.year) {
-            @if (newShelfPerYear() && !$first) {
+          @for (group of groups(); track group.label) {
+            @if (newShelfPerYear() && sort() === 'year' && !$first) {
               <li class="shelf-page-break" aria-hidden="true"></li>
             }
             <li class="shelf-page-divider">
               <span class="shelf-page-divider-card">
-                <strong>{{ group.year }}</strong>
+                <strong>{{ group.label }}</strong>
                 <small aria-hidden="true">{{ group.books.length }}</small>
                 <span class="sr-only">, {{ group.books.length }} books</span>
               </span>

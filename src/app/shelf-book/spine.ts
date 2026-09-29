@@ -67,6 +67,10 @@ const AUTHOR_GAP = 8;
 // Narrowest first, Oswald goes before the equally narrow Playfair because it stays crisp when small
 const FALLBACK_ORDER: SpineStyle[] = ['display', 'condensed', 'serif', 'sans', 'classic'];
 
+export function surname(author: string): string {
+  return author.split(' ').pop() ?? '';
+}
+
 /**
  * Sizes the title to fit the spine, like real books do: long titles get smaller letters, thick
  * spines may break the title onto a second line, and a title too long for the book's own

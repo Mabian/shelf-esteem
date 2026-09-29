@@ -2,7 +2,14 @@ import { Component, computed, inject, input, resource } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CoverColorService, inkFor, toCss } from '../cover-color.service';
 import { Book } from '../goodreads.service';
-import { spineHeight, spineLettering, spineStyle, spineTitle, spineWidth } from './spine';
+import {
+  spineHeight,
+  spineLettering,
+  spineStyle,
+  spineTitle,
+  spineWidth,
+  surname,
+} from './spine';
 
 @Component({
   selector: 'li[app-shelf-book]',
@@ -25,7 +32,7 @@ export class ShelfBook {
   protected readonly height = computed(() => spineHeight(this.book().id));
   protected readonly styleClass = computed(() => `shelf-book-${this.lettering().style}`);
   protected readonly title = computed(() => spineTitle(this.book().title));
-  private readonly surname = computed(() => this.book().author.split(' ').pop() ?? '');
+  private readonly surname = computed(() => surname(this.book().author));
   protected readonly lettering = computed(() =>
     spineLettering(
       spineStyle(this.book().id),
