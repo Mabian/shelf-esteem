@@ -33,13 +33,6 @@
   initial-value: #cfc8f5;
 }
 
-// 1 while a book is raised above its neighbors, which lasts until it has tipped back
-@property --shelf-book-raised {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 0;
-}
-
 // Bookcase palettes, picked on the shelf page
 [data-bookcase='walnut'] {
   --bookcase-frame: #5a3a26;

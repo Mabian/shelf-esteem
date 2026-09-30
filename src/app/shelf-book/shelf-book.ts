@@ -1,4 +1,14 @@
-import { Component, computed, inject, input, resource } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  input,
+  resource,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CoverColorService, inkFor, toCss } from '../cover-color.service';
 import { Book } from '../goodreads.service';
@@ -18,6 +28,7 @@ import {
   styleUrl: './shelf-book.scss',
   host: {
     class: 'shelf-book',
+    '[class.shelf-book-tipped]': 'tipped()',
     '[style.--shelf-book-color]': 'color()',
     '[style.--shelf-book-ink]': 'ink()',
   },
@@ -57,6 +68,26 @@ export class ShelfBook {
   protected readonly ink = computed(() =>
     this.coverColor.hasValue() ? inkFor(this.coverColor.value()) : null,
   );
+
+  protected readonly tipped = signal(false);
+  private tipTimer: ReturnType<typeof setTimeout> | undefined;
+  private readonly link = viewChild.required<ElementRef<HTMLElement>>('link');
+
+  constructor() {
+    afterNextRender(() => {
+      const link = this.link().nativeElement;
+      link.addEventListener('pointerenter', () => {
+        this.tipTimer = setTimeout(() => {
+          this.tipped.set(true);
+          this.preloadCover();
+        }, 60);
+      });
+      link.addEventListener('pointerleave', () => {
+        clearTimeout(this.tipTimer);
+        this.tipped.set(false);
+      });
+    });
+  }
 
   // Warms the browser cache, so the opened view has the large cover before its transition
   protected preloadCover(): void {

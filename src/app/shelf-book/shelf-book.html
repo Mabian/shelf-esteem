@@ -3,7 +3,7 @@
   [id]="'book-' + book().id"
   [routerLink]="['book', book().id]"
   [attr.aria-label]="book().title + ' by ' + book().author"
-  (pointerenter)="preloadCover()"
+  #link
   (focus)="preloadCover()"
 >
   <span class="shelf-book-box" [style.width.px]="width()" [style.height.px]="height()">
