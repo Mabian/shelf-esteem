@@ -109,7 +109,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  // clip, not hidden, here and on the lettering: hidden makes every element a scroll container,
+  // and the thousands of them tripled the cost of re-layerizing the shelf on each hover
+  overflow: clip;
   width: 100%;
   height: 100%;
   padding: 14px 0 12px;
@@ -137,7 +139,7 @@
   .shelf-book-author {
     writing-mode: vertical-rl;
     white-space: nowrap;
-    overflow: hidden;
+    overflow: clip;
     text-overflow: ellipsis;
     min-height: 0;
     line-height: 1;
