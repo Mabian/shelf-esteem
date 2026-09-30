@@ -66,8 +66,12 @@
       transition-delay: 0s;
     }
 
+    .shelf-book-box::before {
+      opacity: 1;
+      transition-duration: 0.35s;
+    }
+
     .shelf-book-spine {
-      box-shadow: 0 -10px 24px -6px rgb(0 0 0 / 55%);
       filter: brightness(0.9);
       transition-duration: 0.35s;
     }
@@ -84,6 +88,19 @@
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+  }
+
+  // The shadow of the tipped book. It fades in via opacity, which the compositor animates: a
+  // transition of the spine's box-shadow repainted and re-layerized the whole shelf every frame
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 2px;
+    box-shadow: 0 -10px 24px -6px rgb(0 0 0 / 55%);
+    opacity: 0;
+    transition: opacity 0.1s;
+    pointer-events: none;
   }
 }
 
@@ -105,9 +122,7 @@
   box-shadow:
     3px 0 3px -1px rgb(0 0 0 / calc(0.35 * (1 - var(--shelf-book-raised)))),
     8px 2px 12px -4px rgb(0 0 0 / calc(0.3 * (1 - var(--shelf-book-raised))));
-  transition:
-    box-shadow 0.1s,
-    filter 0.1s;
+  transition: filter 0.1s;
 
   // Paper grain
   &::before {
